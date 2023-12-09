@@ -66,7 +66,8 @@ done
 
 # Build /var/lib/gpt/config.env file
 env_file="/var/lib/gpt/config.env"
-mkdir -p "/var/lib/gpt/"
+sudo mkdir -p "/var/lib/gpt/"
+chown -R "$USER:$USER" "/var/lib/gpt/"
 
 # Check if the file exists
 if [ ! -f "$env_file" ]; then
