@@ -20,19 +20,17 @@ var (
 )
 
 func init() {
-	err := godotenv.Load()
+	err := godotenv.Load("/var/lib/gpt/config.env")
 	if err != nil {
-		log.Fatal("Error loading .env file")
-		return
+		err = godotenv.Load()
+		if err != nil {
+			log.Fatal("Error loading .env file")
+			return
+		}
 	}
 	accessKey = os.Getenv("PORCUPINE_ACCESS_KEY")
 	if accessKey == "" {
 		log.Fatal("PORCUPINE_ACCESS_KEY is not set")
-		return
-	}
-	modelPath := os.Getenv("PORCUPINE_MODEL_PATH")
-	if modelPath == "" {
-		log.Fatal("PORCUPINE_MODEL_PATH is not set")
 		return
 	}
 	client, err = api_client.NewApiClient()
