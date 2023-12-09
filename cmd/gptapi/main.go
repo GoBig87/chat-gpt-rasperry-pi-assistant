@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/GoBig87/chat-gpt-raspberry-pi-assistant/internal/server"
 	"github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/api/v1"
+	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 	"google.golang.org/grpc"
 	"log"
@@ -11,8 +12,36 @@ import (
 	"os"
 )
 
+var (
+	chatGptApiEndpoint string
+	chatGptApiKey      string
+	chatGptOrgID       string
+)
+
 func init() {
-	// TODO add env vars here
+	err := godotenv.Load("/var/lib/gpt/config.env")
+	if err != nil {
+		err = godotenv.Load()
+		if err != nil {
+			log.Fatal("Error loading .env file")
+			return
+		}
+	}
+	chatGptApiEndpoint = os.Getenv("CHAT_GPT_API_ENDPOINT")
+	if chatGptApiEndpoint == "" {
+		log.Fatal("CHAT_GPT_API_ENDPOINT is not set")
+		return
+	}
+	chatGptApiKey = os.Getenv("CHAT_GPT_API_KEY")
+	if chatGptApiKey == "" {
+		log.Fatal("CHAT_GPT_API_KEY is not set")
+		return
+	}
+	chatGptOrgID = os.Getenv("CHAT_GPT_ORG_ID")
+	if chatGptOrgID == "" {
+		log.Fatal("CHAT_GPT_ORG_ID is not set")
+		return
+	}
 }
 
 func main() {
@@ -45,7 +74,7 @@ func runGrpcServer() error {
 
 	api.RegisterSpeechToTextServiceServer(grpcServer, server.MakeSpeechToTextServer())
 	api.RegisterTextToSpeechServiceServer(grpcServer, server.MakeTextToSpeechServer())
-	api.RegisterChatGptServiceServer(grpcServer, server.MakeChatGptServer())
+	api.RegisterChatGptServiceServer(grpcServer, server.MakeChatGptServer(chatGptApiKey, chatGptOrgID, chatGptApiEndpoint))
 
 	lis, err := net.Listen("tcp", grpcEndpoint)
 	if err != nil {
