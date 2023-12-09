@@ -13,7 +13,12 @@ import (
 	ww "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/wake-word"
 )
 
-var accessKey string
+var (
+	chatGptApiEndpoint string
+	chatGptApiKey      string
+	chatGptOrgID       string
+	accessKey          string
+)
 
 func init() {
 	err := godotenv.Load()
@@ -32,6 +37,21 @@ func init() {
 		return
 	}
 
+	chatGptApiEndpoint = os.Getenv("CHAT_GPT_API_ENDPOINT")
+	if chatGptApiEndpoint == "" {
+		log.Fatal("CHAT_GPT_API_ENDPOINT is not set")
+		return
+	}
+	chatGptApiKey = os.Getenv("CHAT_GPT_API_KEY")
+	if chatGptApiKey == "" {
+		log.Fatal("CHAT_GPT_API_KEY is not set")
+		return
+	}
+	chatGptOrgID = os.Getenv("CHAT_GPT_ORG_ID")
+	if chatGptOrgID == "" {
+		log.Fatal("CHAT_GPT_ORG_ID is not set")
+		return
+	}
 	rootCmd.InitDefaultHelpCmd()
 	walk(rootCmd, func(c *cobra.Command) {
 		if c.Name() == "help" {
@@ -104,7 +124,9 @@ var chatGptCmd = &cobra.Command{
 	Args:          cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		text := args[0]
-		resp, err := gpt.PromptChatGPT(text)
+		gc := gpt.NewChatGptClient(chatGptApiKey, chatGptApiKey, chatGptOrgID)
+
+		resp, err := gc.PromptChatGPT(text)
 		if err != nil {
 			fmt.Printf("Error: %v\n\n", err)
 			return err

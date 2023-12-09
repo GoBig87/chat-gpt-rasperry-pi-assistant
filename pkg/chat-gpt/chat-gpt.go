@@ -9,14 +9,21 @@ import (
 	"net/http"
 )
 
-const (
-	ApiEndpoint = "https://api.openai.com/v1/chat/completions"
-	// TODO MOVE THIS TO SECRET ENV
-	apiKey = "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"
-	orgID  = "org-iI4aycPPx8nsqN0IDcZb3qUI"
-)
+type ChatGptClient struct {
+	ApiKey      string
+	OrgID       string
+	ApiEndpoint string
+}
 
-func PromptChatGPT(question string) (string, error) {
+func NewChatGptClient(apiKey, orgId, apiEndpoint string) *ChatGptClient {
+	return &ChatGptClient{
+		ApiKey:      apiKey,
+		OrgID:       orgId,
+		ApiEndpoint: apiEndpoint,
+	}
+}
+
+func (c *ChatGptClient) PromptChatGPT(question string) (string, error) {
 	// Create a new HTTP client
 	client := &http.Client{}
 
@@ -35,7 +42,7 @@ func PromptChatGPT(question string) (string, error) {
 	}
 
 	// Create a new HTTP request
-	req, err := http.NewRequest("POST", ApiEndpoint, bytes.NewBuffer(payloadJSON))
+	req, err := http.NewRequest("POST", c.ApiEndpoint, bytes.NewBuffer(payloadJSON))
 	if err != nil {
 		log.Fatalf("Error creating HTTP request: %v", err)
 		return "", err
@@ -43,8 +50,8 @@ func PromptChatGPT(question string) (string, error) {
 
 	// Set headers and authentication token
 	req.Header.Set("Content-Type", "application/json")
-	req.Header.Set("Authorization", "Bearer "+apiKey)
-	req.Header.Set("OpenAI-Organization", orgID)
+	req.Header.Set("Authorization", "Bearer "+c.ApiKey)
+	req.Header.Set("OpenAI-Organization", c.OrgID)
 
 	// Send the HTTP request
 	resp, err := client.Do(req)
