@@ -24,6 +24,14 @@ else
   source ~/.bashrc
 fi
 
+# install jq
+if which jq &> /dev/null; then
+  echo "jq is already installed. Skipping installation."
+else
+  echo "Installing jq"
+  sudo apt-get install jq
+fi
+
 # Install gcloud
 if which gcloud &> /dev/null; then
   echo "gcloud is already installed. Skipping installation."
