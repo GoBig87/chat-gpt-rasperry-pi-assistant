@@ -107,7 +107,7 @@ fi
 
 # Check if the open ai access key variable is present in the file
 openai_key="CHAT_GPT_API_KEY"
-if ! grep -q "^$openai_keyy=" "$env_file" || [ -z "$(grep "^$openai_keyy=" "$env_file" | cut -d'=' -f2)" ]; then
+if ! grep -q "^$openai_key=" "$env_file" || [ -z "$(grep "^$openai_keyy=" "$env_file" | cut -d'=' -f2)" ]; then
   echo "No Open AI access key found in $env_file.  Please create one at https://platform.openai.com/api-keys and enter it below."
   chromium-browser "https://platform.openai.com/api-keys"  2>/dev/null &
 
