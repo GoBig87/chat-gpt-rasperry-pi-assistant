@@ -44,24 +44,29 @@ go mod vendor
 declare -a targets=("gptapi" "gptapp" "gptctl")
 
 for target in "${targets[@]}"; do
-  echo "Installing $target"
+  if which $target &> /dev/null; then
+    echo "$target is already built. Skipping build."
+  else
+    echo "Installing $target"
 
-  # Change to cmd/$target directory and run make build
-  cd "cmd/$target"
-  make build
+    # Change to cmd/$target directory and run make build
+    cd "cmd/$target"
+    make build
 
-  # Check if make build was successful
-  if [ $? -ne 0 ]; then
-    echo "Error: failed build $target. Exiting."
-    exit 1
+    # Check if make build was successful
+    if [ $? -ne 0 ]; then
+      echo "Error: failed build $target. Exiting."
+      exit 1
+    fi
+
+    # Return to the top-level directory
+    cd ../..
   fi
-
-  # Return to the top-level directory
-  cd ../..
 done
 
 # Build /var/lib/gpt/config.env file
 env_file="/var/lib/gpt/config.env"
+mkidr -p "/var/lib/gpt/"
 
 # Check if the file exists
 if [ ! -f "$env_file" ]; then
