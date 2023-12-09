@@ -160,7 +160,7 @@ if [ -n "$selected_json" ]; then
   cp "$selected_json" "$gpt_dir"
   echo "Copied $selected_json to $gpt_dir"
   key_file="/var/lib/gpt/$selected_json"
-  gcloud auth activate-service-account --key-file=key_file
+  gcloud auth activate-service-account --key-file=$key_file
 else
   echo "service account file not found. exiting..."
   exit 1
