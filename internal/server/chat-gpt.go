@@ -19,7 +19,7 @@ func MakeChatGptServer(apiKey, orgId, endpoint string) *ChatGptServer {
 type ChatGptServer struct {
 	client *gpt.ChatGptClient
 	api.UnimplementedChatGptServiceServer
-}git 
+}
 
 func (s *ChatGptServer) ProcessPrompt(ctx context.Context, req *api.ProcessPromptRequest) (*api.ProcessPromptResponse, error) {
 	log.Printf("Received prompt: %s\n", req.Prompt)
