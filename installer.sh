@@ -149,7 +149,7 @@ json_files=($(find "$downloads_dir" -type f -name "*.json" -exec stat -c "%Y %n"
 selected_json=""
 
 for json_file in "${json_files[@]}"; do
-  if jq -e '.type == "" or .project_id == ""' "$json_file" >/dev/null; then
+  if jq -e 'has("type") and has("project_id")' "$json_file" >/dev/null; then
     selected_json="$json_file"
     break
   fi
