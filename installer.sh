@@ -49,7 +49,7 @@ echo "Installing golang dependencies"
 go mod vendor
 
 # Build targets
-declare -a targets=("gptapi" "gptapp" "gptctl")
+declare -a targets=("gpt-api" "gpt-app" "gpt-ctl")
 
 for target in "${targets[@]}"; do
   if which $target &> /dev/null; then
