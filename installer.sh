@@ -156,12 +156,11 @@ for json_file in "${json_files[@]}"; do
 done
 
 if [ -n "$selected_json" ]; then
-  filename=$(basename "$selected_json")
+  filename=$gpt_dir/$(basename "$selected_json")
   echo "Found service account file: $filename"
-  cp "$selected_json" "$gpt_dir/$filename"
+  cp "$selected_json" "$filename"
   echo "Copied $filename to $gpt_dir"
-  key_file="/var/lib/gpt/$filename"
-  gcloud auth activate-service-account --key-file=$key_file
+  gcloud auth activate-service-account --key-file=$filename
 else
   echo "service account file not found. exiting..."
   exit 1
