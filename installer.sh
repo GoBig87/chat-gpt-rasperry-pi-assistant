@@ -160,7 +160,8 @@ if [ -n "$selected_json" ]; then
   echo "Found service account file: $filename"
   cp "$selected_json" "$filename"
   echo "Copied $filename to $gpt_dir"
-  gcloud auth activate-service-account --key-file=$filename
+  gcloud auth activate-service-account --key-file=
+  export GOOGLE_APPLICATION_CREDENTIALS="$filename"
 else
   echo "service account file not found. exiting..."
   exit 1
