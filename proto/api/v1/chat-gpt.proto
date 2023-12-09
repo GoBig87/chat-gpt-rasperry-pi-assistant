@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package api.v1.chat_gpt;
+
+option go_package = "github.com/GoBig87/chat-gpt-rasperry-pi-assistant/pkg/api/v1;api;";
+
+
+message ProcessPromptRequest {
+  string  prompt = 1;
+}
+
+message ProcessPromptResponse {
+  string  response = 1;
+}
+
+// The Chat GPT API service
+//
+// This API handles sending a prompt to chatGPT and receiving
+// the response.
+service ChatGptService {
+  // Process Prompt
+  //
+  // Sends a prompt to chatGPT and returns the response.
+  rpc ProcessPrompt(ProcessPromptRequest) returns (ProcessPromptResponse) {
+  }
+}

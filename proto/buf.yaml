@@ -1,0 +1,14 @@
+version: v1beta1
+name: buf.build/gobig87/chat-gpt-rasperry-pi-assistant
+deps:
+  - buf.build/googleapis/googleapis
+  - buf.build/grpc-ecosystem/grpc-gateway
+build:
+  roots:
+    - .
+lint:
+  use:
+    - DEFAULT
+breaking:
+  use:
+    - FILE

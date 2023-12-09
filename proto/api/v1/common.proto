@@ -1,0 +1,13 @@
+syntax = "proto3";
+
+package api.v1.common;
+
+option go_package = "github.com/GoBig87/chat-gpt-rasperry-pi-assistant/pkg/api/v1;api;";
+
+
+enum WakeWord {
+  WAKE_WORD_UNSPECIFIED       = 0;
+  WAKE_WORD_HEY_GOOGLE        = 1;
+  WAKE_WORD_VOLUME            = 2;
+  WAKE_WORD_HEY_BILLY_BASS    = 3;
+}

@@ -1,0 +1,26 @@
+syntax = "proto3";
+
+package api.v1.text_to_speech;
+
+option go_package = "github.com/GoBig87/chat-gpt-rasperry-pi-assistant/pkg/api/v1;api;";
+
+
+message ProcessTextRequest {
+  string text = 1;
+}
+
+message ProcessTextResponse {
+  bool processed = 1;
+}
+
+// The Text to Speech API service
+//
+// This API handles the raspberry pi's text to speech
+service TextToSpeechService {
+  // Start Processing Text to Audio
+  //
+  // This takes in an input of text and produces
+  // an audio out put of it.
+  rpc ProcessText(ProcessTextRequest) returns (stream ProcessTextResponse) {
+  }
+}

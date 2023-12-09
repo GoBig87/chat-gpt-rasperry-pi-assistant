@@ -1,0 +1,29 @@
+syntax = "proto3";
+
+package api.v1.speech_to_text;
+
+option go_package = "github.com/GoBig87/chat-gpt-rasperry-pi-assistant/pkg/api/v1;api;";
+
+import "api/v1/common.proto";
+
+message ProcessSpeechRequest {
+ api.v1.common.WakeWord wakeWord = 1;
+}
+
+message ProcessSpeechResponse {
+  bool    processing      = 1;
+  string  transcribedText = 2;
+}
+
+// The Speech To Text API service
+//
+// This API handles the raspberry pi's speech to text
+service SpeechToTextService {
+  // Start Processing Audio
+  //
+  // This is kicked off when the wake word is registered.
+  // When speech is no longer detected, the response will return
+  // false and the wake word will begin listening again.
+  rpc ProcessSpeech(ProcessSpeechRequest) returns (stream ProcessSpeechResponse) {
+  }
+}
