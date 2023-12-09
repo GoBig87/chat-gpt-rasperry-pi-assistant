@@ -157,8 +157,10 @@ done
 
 if [ -n "$selected_json" ]; then
   echo "Found a JSON file with missing keys: $selected_json"
+else
+  echo "JSON found $selected_json"
   cp "$selected_json" "$gpt_dir"
   echo "Copied $selected_json to $gpt_dir"
-else
-  echo "No JSON file with missing keys found in $downloads_dir"
+  key_file="/var/lib/gpt/$selected_json"
+  gcloud auth activate-service-account --key-filekey_file
 fi
