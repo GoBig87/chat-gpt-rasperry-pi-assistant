@@ -78,7 +78,7 @@ fi
 porcupine_key="PORCUPINE_ACCESS_KEY"
 if ! grep -q "^$porcupine_key=" "$env_file" || [ -z "$(grep "^$porcupine_key=" "$env_file" | cut -d'=' -f2)" ]; then
   echo "No Picovoice access key found in $env_file.  Please create one at https://picovoice.ai/console/ and enter it below."
-  chromium-browser "https://console.picovoice.ai/"
+  chromium-browser "https://console.picovoice.ai/"  2>/dev/null &
 
   # Prompt user for the access key
   read -p "Enter Picovoice key value: " user_input
@@ -100,7 +100,7 @@ fi
 openai_key="CHAT_GPT_API_KEY"
 if ! grep -q "^$openai_keyy=" "$env_file" || [ -z "$(grep "^$openai_keyy=" "$env_file" | cut -d'=' -f2)" ]; then
   echo "No Open AI access key found in $env_file.  Please create one at https://platform.openai.com/api-keys and enter it below."
-  chromium-browser "https://platform.openai.com/api-keys"
+  chromium-browser "https://platform.openai.com/api-keys"  2>/dev/null &
 
   # Prompt user for the access key
   read -p "Enter Open AI key value: " user_input
@@ -113,7 +113,7 @@ fi
 openai_org="CHAT_GPT_ORG_ID"
 if ! grep -q "^$openai_org=" "$env_file" || [ -z "$(grep "^$openai_org=" "$env_file" | cut -d'=' -f2)" ]; then
   echo "No Open AI organization id found in $env_file.  Please create one at https://platform.openai.com/account/organization and enter it below."
-  chromium-browser "https://platform.openai.com/account/organization"
+  chromium-browser "https://platform.openai.com/account/organization"  2>/dev/null &
 
   # Prompt user for the access key
   read -p "Enter Open AI organization id value: " user_input
@@ -124,14 +124,14 @@ fi
 
 # next sign up for google cloud and create a project
 echo "Next, sign up for google cloud and create a project at https://cloud.google.com/speech-to-text"
-chromium-browser "https://cloud.google.com/speech-to-text"
+chromium-browser "https://cloud.google.com/speech-to-text"  2>/dev/null &
 
 # Prompt the user to press Enter
 read -p "Press Enter once you have signed up for google cloud platform."
 
 # next create a service account and download the json file
 echo "Next, create a service account and download the json file at https://console.cloud.google.com/iam-admin/serviceaccounts"
-chromium-browser "https://console.cloud.google.com/iam-admin/serviceaccounts"
+chromium-browser "https://console.cloud.google.com/iam-admin/serviceaccounts"  2>/dev/null &
 
 echo "Looking for the service account json file in ~/Downloads"
 downloads_dir="$HOME/Downloads"
