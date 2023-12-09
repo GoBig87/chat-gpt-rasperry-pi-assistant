@@ -149,7 +149,7 @@ json_files=($(find "$downloads_dir" -type f -name "*.json" -exec stat -c "%Y %n"
 selected_json=""
 
 for json_file in "${json_files[@]}"; do
-  if jq -e 'has("type") and has("project_id")' "$json_file" >/dev/null; then
+  if jq -e '.type == "service_account"' "$json_file" >/dev/null; then
     selected_json="$json_file"
     break
   fi
@@ -162,5 +162,5 @@ else
   cp "$selected_json" "$gpt_dir"
   echo "Copied $selected_json to $gpt_dir"
   key_file="/var/lib/gpt/$selected_json"
-  gcloud auth activate-service-account --key-filekey_file
+  gcloud auth activate-service-account --key-file=key_file
 fi
