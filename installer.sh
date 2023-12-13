@@ -18,7 +18,7 @@ else
   echo 'export PATH=$GOBIN:$GOROOT/bin:$PATH' >> ~/.bashrc
 
   # Clean up downloaded archive
-  rm go$go_desired_version.linux-armv6l.tar.gz
+  rm go$go_desired_version.linux-arm64.tar.gz
   echo "Golang version $go_desired_version installed successfully"
 
   source ~/.bashrc
@@ -161,7 +161,7 @@ if [ -n "$selected_json" ]; then
   cp "$selected_json" "$filename"
   echo "Copied $filename to $gpt_dir"
   gcloud auth activate-service-account --key-file=$filename
-  export GOOGLE_APPLICATION_CREDENTIALS="$filename"
+  export GOOGLE_APPLICATION_CREDENTIALS=$filename
 else
   echo "service account file not found. exiting..."
   exit 1

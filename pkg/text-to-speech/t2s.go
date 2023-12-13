@@ -33,8 +33,9 @@ func TranscribeText(text string) error {
 		// Build the voice request, select the language code ("en-US") and the SSML
 		// voice gender ("neutral").
 		Voice: &texttospeechpb.VoiceSelectionParams{
+			Name:         "en-US-Studio-Q",
 			LanguageCode: "en-US",
-			SsmlGender:   texttospeechpb.SsmlVoiceGender_NEUTRAL,
+			SsmlGender:   texttospeechpb.SsmlVoiceGender_MALE,
 		},
 		// Select the type of audio file you want returned.
 		AudioConfig: &texttospeechpb.AudioConfig{

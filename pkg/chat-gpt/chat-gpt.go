@@ -31,7 +31,7 @@ func (c *ChatGptClient) PromptChatGPT(question string) (string, error) {
 	payload := map[string]interface{}{
 		"model":      "gpt-3.5-turbo",
 		"messages":   []interface{}{map[string]interface{}{"role": "system", "content": question}},
-		"max_tokens": 100,
+		"max_tokens": 2048,
 	}
 
 	// Convert the payload to JSON
