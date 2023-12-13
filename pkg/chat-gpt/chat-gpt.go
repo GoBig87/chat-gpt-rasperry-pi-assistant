@@ -67,7 +67,7 @@ func (c *ChatGptClient) PromptChatGPT(question string) (string, error) {
 	// Prepare the request payload
 	payload := &ChatGptRequest{
 		Model:    "gpt-3.5-turbo",
-		Messages: []RequestMessage{{Role: "system", Content: question}},
+		Messages: []RequestMessage{{Role: "assistant", Content: question}},
 		Stream:   true,
 	}
 
@@ -77,7 +77,7 @@ func (c *ChatGptClient) PromptChatGPT(question string) (string, error) {
 		log.Fatalf("Error encoding JSON payload: %v", err)
 		return "", err
 	}
-
+	log.Printf("made json payload: %s", string(payloadJSON))
 	// Create a new HTTP request
 	req, err := http.NewRequest("POST", c.ApiEndpoint, bytes.NewBuffer(payloadJSON))
 	if err != nil {
