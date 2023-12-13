@@ -15,7 +15,7 @@ func DetectWakeWord(accessKey string) (porcupine.BuiltInKeyword, error) {
 		//log.Printf(fmt.Sprintf("%v\n", message))
 	})
 	if err != nil {
-		log.Fatalf("malgo failed to init", zap.Error(err))
+		log.Print("malgo failed to init", zap.Error(err))
 	}
 	defer func() {
 		_ = context.Uninit()
@@ -54,7 +54,7 @@ func DetectWakeWord(accessKey string) (porcupine.BuiltInKeyword, error) {
 				shortBufOffset = 0
 				keywordIndex, err := p.Process(shortBuf)
 				if err != nil {
-					log.Fatal(err)
+					log.Print("Error on processing key word", zap.Error(err))
 				} else {
 					if keywordIndex >= 0 {
 						finishedProcessing = true
@@ -72,13 +72,13 @@ func DetectWakeWord(accessKey string) (porcupine.BuiltInKeyword, error) {
 	}
 	device, err := malgo.InitDevice(context.Context, deviceConfig, captureCallbacks)
 	if err != nil {
-		log.Fatal(err)
+		log.Print("Error on init device", zap.Error(err))
 		return "", err
 	}
 
 	err = device.Start()
 	if err != nil {
-		log.Fatal(err)
+		log.Print("Error on start device", zap.Error(err))
 		return "", err
 	}
 

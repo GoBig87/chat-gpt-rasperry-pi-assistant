@@ -1,7 +1,6 @@
 package server
 
 import (
-	"fmt"
 	"github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/api/v1"
 	s2t "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/speech-to-text"
 	"log"
@@ -30,11 +29,11 @@ func (s *SpeechToTextServer) ProcessSpeech(req *api.ProcessSpeechRequest, stream
 		transcribedText, transcribeError = s2t.TranscribeSpeech()
 		if transcribeError != nil {
 			// Handle error, you may want to send an error response to the client
-			fmt.Println("Error in TranscribeSpeech:", transcribeError)
+			log.Println("Error in TranscribeSpeech:", transcribeError)
 			transcriptionComplete <- true
 			return
 		}
-		fmt.Println(transcribedText)
+		log.Println(transcribedText)
 		transcriptionComplete <- true
 	}()
 

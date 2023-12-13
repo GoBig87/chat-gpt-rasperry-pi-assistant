@@ -34,7 +34,7 @@ func (t *TextToSpeechServer) ProcessText(req *api.ProcessTextRequest, stream api
 			transcriptionComplete <- true
 			return
 		}
-		fmt.Println(transcribedText)
+		log.Println(transcribedText)
 		transcriptionComplete <- true
 	}()
 

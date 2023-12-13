@@ -8,6 +8,7 @@ import (
 	"errors"
 	"github.com/gen2brain/malgo"
 	"github.com/hajimehoshi/go-mp3"
+	"go.uber.org/zap"
 	"io"
 	"log"
 )
@@ -18,7 +19,7 @@ func TranscribeText(text string) error {
 
 	client, err := texttospeech.NewClient(ctx)
 	if err != nil {
-		log.Fatalf("failed to create text to speech client: \n %v", err)
+		log.Print("failed to create text to speech client", zap.Error(err))
 		return err
 	}
 	defer client.Close()
@@ -45,7 +46,7 @@ func TranscribeText(text string) error {
 
 	resp, err := client.SynthesizeSpeech(ctx, &req)
 	if err != nil {
-		log.Fatalf("failed to synthesize speach: \n %v", err)
+		log.Print("failed to synthesize speach", zap.Error(err))
 		return err
 	}
 	mp3Bytes := resp.AudioContent
@@ -54,7 +55,7 @@ func TranscribeText(text string) error {
 		//fmt.Printf("LOG <%v>\n", message)
 	})
 	if err != nil {
-		log.Fatalf("failed to init malgo: \n %v", err)
+		log.Print("failed to init malgo", zap.Error(err))
 		return err
 	}
 	defer func() {
@@ -64,7 +65,7 @@ func TranscribeText(text string) error {
 
 	reader, err := mp3.NewDecoder(bytes.NewReader(mp3Bytes))
 	if err != nil {
-		log.Fatalf("failed to create new decoder: \n %v", err)
+		log.Print("failed to create new decoder", zap.Error(err))
 		return err
 	}
 
@@ -81,7 +82,7 @@ func TranscribeText(text string) error {
 		if errors.Is(io.ErrUnexpectedEOF, err) {
 			finishedProcessing = true
 		} else if err != nil {
-			log.Fatalf("failed to read full: \n %v", err)
+			log.Print("failed to read full", zap.Error(err))
 		}
 	}
 	deviceCallbacks := malgo.DeviceCallbacks{
@@ -90,14 +91,14 @@ func TranscribeText(text string) error {
 
 	device, err := malgo.InitDevice(context.Context, deviceConfig, deviceCallbacks)
 	if err != nil {
-		log.Fatalf("failed to init device :\n %v", err)
+		log.Print("failed to init device", zap.Error(err))
 		return err
 	}
 	defer device.Uninit()
 
 	err = device.Start()
 	if err != nil {
-		log.Fatalf("failed to start device: \n %v", err)
+		log.Print("failed to start device", zap.Error(err))
 		return err
 	}
 

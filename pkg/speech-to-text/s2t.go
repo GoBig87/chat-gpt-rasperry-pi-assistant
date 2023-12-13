@@ -50,7 +50,7 @@ func TranscribeSpeech() (string, error) {
 		//log.Print(fmt.Sprintf("%v\n", message))
 	})
 	if err != nil {
-		log.Fatal("malgo failed to init", zap.Error(err))
+		log.Print("malgo failed to init", zap.Error(err))
 	}
 	defer func() {
 		_ = context.Uninit()
@@ -102,13 +102,13 @@ func TranscribeSpeech() (string, error) {
 	}
 	device, err := malgo.InitDevice(context.Context, deviceConfig, captureCallbacks)
 	if err != nil {
-		log.Fatal(err)
+		log.Print("failed to init malgo", zap.Error(err))
 	}
 
 	go func() {
 		err = device.Start()
 		if err != nil {
-			log.Fatalf("failed to start device: %v", err)
+			log.Print("failed to start device", zap.Error(err))
 		}
 	}()
 
@@ -122,7 +122,7 @@ func TranscribeSpeech() (string, error) {
 				fmt.Println("Timeout reached, closing stream.")
 				err = stream.CloseSend()
 				if err != nil {
-					log.Fatalf("Could not close stream: %v", err)
+					log.Print("Could not close stream", zap.Error(err))
 				} else {
 					streamStopped = true
 				}
@@ -139,14 +139,13 @@ func TranscribeSpeech() (string, error) {
 			break
 		}
 		if err != nil {
-			log.Fatalf("Cannot stream results: %v", err)
+			log.Print("Cannot stream results", zap.Error(err))
 		}
 		if err := resp.Error; err != nil {
 			// Workaround while the API doesn't give a more informative error.
 			if err.Code == 3 || err.Code == 11 {
 				log.Print("WARNING: Speech recognition request exceeded limit of 60 seconds.")
 			}
-			log.Fatalf("Could not recognize: %v", err)
 		}
 		tempRet := ""
 		for _, result := range resp.Results {

@@ -3,12 +3,48 @@ package chat_gpt
 import (
 	"bytes"
 	"encoding/json"
-	"errors"
 	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
 )
+
+type ChatGptRequest struct {
+	Model    string           `json:"model"`
+	Messages []RequestMessage `json:"messages"`
+	Stream   bool             `json:"stream"`
+}
+
+type RequestMessage struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
+}
+
+type ChatGptResponse struct {
+	Id      string   `json:"id"`
+	Object  string   `json:"object"`
+	Created int      `json:"created"`
+	Model   string   `json:"model"`
+	Usage   Usage    `json:"usage"`
+	Choices []Choice `json:"choices"`
+}
+
+type Usage struct {
+	PromptTokens     int `json:"prompt_tokens"`
+	CompletionTokens int `json:"completion_tokens"`
+	TotalTokens      int `json:"total_tokens"`
+}
+
+type Choice struct {
+	Message      ResponseMessage `json:"message"`
+	FinishReason string          `json:"finish_reason"`
+	Index        int             `json:"index"`
+}
+
+type ResponseMessage struct {
+	Role    string `json:"role"`
+	Content string `json:"content"`
+}
 
 type ChatGptClient struct {
 	ApiKey      string
@@ -29,10 +65,10 @@ func (c *ChatGptClient) PromptChatGPT(question string) (string, error) {
 	client := &http.Client{}
 
 	// Prepare the request payload
-	payload := map[string]interface{}{
-		"model":      "gpt-3.5-turbo",
-		"messages":   []interface{}{map[string]interface{}{"role": "system", "content": question}},
-		"max_tokens": 2048,
+	payload := &ChatGptRequest{
+		Model:    "gpt-3.5-turbo",
+		Messages: []RequestMessage{{Role: "system", Content: question}},
+		Stream:   true,
 	}
 
 	// Convert the payload to JSON
@@ -57,7 +93,7 @@ func (c *ChatGptClient) PromptChatGPT(question string) (string, error) {
 	// Send the HTTP request
 	resp, err := client.Do(req)
 	if err != nil {
-		log.Fatalf("Error sending HTTP request: %v", err)
+		log.Printf("Error sending HTTP request: %v", err)
 		return "", err
 	}
 	defer resp.Body.Close()
@@ -65,43 +101,26 @@ func (c *ChatGptClient) PromptChatGPT(question string) (string, error) {
 	// Read the response body
 	body, err := ioutil.ReadAll(resp.Body)
 	if err != nil {
-		log.Fatalf("Error reading response body: %v", err)
+		log.Printf("Error reading response body: %v", err)
 		return "", err
 	}
 	// Unmarshal JSON response
-	var data map[string]interface{}
-	err = json.Unmarshal(body, &data)
+	response := &ChatGptResponse{}
+	err = json.Unmarshal(body, &response)
 	if err != nil {
-		log.Fatalf("Error decoding JSON response: %v", err)
+		log.Printf("Error decoding JSON response: %v", err)
+		var data map[string]interface{}
+		err2 := json.Unmarshal(body, &data)
+		if err2 != nil {
+			log.Printf("Found error JSON response: %v", data)
+		}
 		return "", err
-	}
-	// TODO NEED TO CATCH ERRORS HERE
-	// Extract the choices array from the JSON response
-	choices, ok := data["choices"].([]interface{})
-	if !ok || len(choices) == 0 {
-		return "", errors.New("malformed response: missing or empty choices array")
 	}
 
 	// Extract the first choice from the array
 	var ret string
-	for _, choice := range choices {
-		firstChoice, ok := choice.(map[string]interface{})
-		if !ok {
-			return "", errors.New("malformed response: invalid format for the first choice")
-		}
-
-		// Extract the message object from the first choice
-		message, ok := firstChoice["message"].(map[string]interface{})
-		if !ok {
-			return "", errors.New("malformed response: missing or invalid message field")
-		}
-
-		// Extract the content string from the message object
-		content, ok := message["content"].(string)
-		if !ok {
-			return "", errors.New("malformed response: missing or invalid content field")
-		}
-		ret = fmt.Sprintf("%s %s", ret, content)
+	for _, choice := range response.Choices {
+		ret = fmt.Sprintf("%s %s", ret, choice.Message.Content)
 	}
 	return ret, nil
 }

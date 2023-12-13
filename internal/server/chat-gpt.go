@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/api/v1"
 	gpt "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/chat-gpt"
+	"go.uber.org/zap"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"log"
@@ -26,7 +27,7 @@ func (s *ChatGptServer) ProcessPrompt(ctx context.Context, req *api.ProcessPromp
 	prompt := req.Prompt
 	resp, err := s.client.PromptChatGPT(prompt)
 	if err != nil {
-		log.Fatalf("Error in ProcessPrompt: %v", err)
+		log.Print("Error in ProcessPrompt", zap.Error(err))
 		return nil, status.Error(codes.Internal, fmt.Sprintf("Error processing prompt: %v", err))
 	}
 	log.Printf("Response finished: %s\n", resp)
