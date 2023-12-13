@@ -4,6 +4,7 @@ import (
 	"bytes"
 	"encoding/json"
 	"errors"
+	"fmt"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -82,22 +83,25 @@ func (c *ChatGptClient) PromptChatGPT(question string) (string, error) {
 	}
 
 	// Extract the first choice from the array
-	firstChoice, ok := choices[0].(map[string]interface{})
-	if !ok {
-		return "", errors.New("malformed response: invalid format for the first choice")
-	}
+	var ret string
+	for _, choice := range choices {
+		firstChoice, ok := choice.(map[string]interface{})
+		if !ok {
+			return "", errors.New("malformed response: invalid format for the first choice")
+		}
 
-	// Extract the message object from the first choice
-	message, ok := firstChoice["message"].(map[string]interface{})
-	if !ok {
-		return "", errors.New("malformed response: missing or invalid message field")
-	}
+		// Extract the message object from the first choice
+		message, ok := firstChoice["message"].(map[string]interface{})
+		if !ok {
+			return "", errors.New("malformed response: missing or invalid message field")
+		}
 
-	// Extract the content string from the message object
-	content, ok := message["content"].(string)
-	if !ok {
-		return "", errors.New("malformed response: missing or invalid content field")
+		// Extract the content string from the message object
+		content, ok := message["content"].(string)
+		if !ok {
+			return "", errors.New("malformed response: missing or invalid content field")
+		}
+		ret = fmt.Sprintf("%s %s", ret, content)
 	}
-
-	return content, nil
+	return ret, nil
 }
