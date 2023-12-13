@@ -74,7 +74,7 @@ func (c *ChatGptClient) PromptChatGPT(question string) (string, error) {
 		log.Fatalf("Error decoding JSON response: %v", err)
 		return "", err
 	}
-
+	// TODO NEED TO CATCH ERRORS HERE
 	// Extract the choices array from the JSON response
 	choices, ok := data["choices"].([]interface{})
 	if !ok || len(choices) == 0 {

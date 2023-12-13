@@ -10,8 +10,8 @@ else
   echo "Golang version $go_desired_version not found, installing..."
 
   # Download and install Golang
-  wget https://golang.org/dl/go$go_desired_version.linux-armv6l.tar.gz
-  sudo tar -C /usr/local -xzf go$go_desired_version.linux-armv6l.tar.gz
+  wget https://golang.org/dl/go$go_desired_version.linux-arm64.tar.gz
+  sudo tar -C /usr/local -xzf go$go_desired_version.linux-arm64.tar.gz
   echo 'export GOROOT=/usr/local/go' >> ~/.bashrc
   echo 'export GOPATH=$HOME/go' >> ~/.bashrc
   echo 'export GOBIN=$GOPATH/bin' >> ~/.bashrc
