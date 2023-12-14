@@ -1,0 +1,33 @@
+syntax = "proto3";
+
+package api.v1.gpio_motor;
+
+option go_package = "github.com/GoBig87/chat-gpt-rasperry-pi-assistant/pkg/api/v1;api;";
+
+import "google/protobuf/empty.proto";
+
+// The GPIO Motor API service
+//
+// This API handles the motor control of Billy Bass
+service GpioMotorService {
+  // CloseMouth closes the mouth.
+  rpc CloseMouth(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+  // LowerHead lowers the head.
+  rpc LowerHead(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+  // LowerTail lowers the tail.
+  rpc LowerTail(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+  // OpenMouth opens the mouth.
+  rpc OpenMouth(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+  // RaiseHead raises the head.
+  rpc RaiseHead(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+  // RaiseTail raises the tail.
+  rpc RaiseTail(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+  // ResetAll resets all motor positions.
+  rpc ResetAll(google.protobuf.Empty) returns (google.protobuf.Empty);
+}
