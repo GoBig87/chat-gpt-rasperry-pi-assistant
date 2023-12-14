@@ -8,6 +8,7 @@ import (
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
+	"log"
 )
 
 func MakeGpioMotorServer(gpioMotor *gpio_motor.GpioMotor) *GpioMotorServer {
@@ -23,6 +24,7 @@ type GpioMotorServer struct {
 
 // CloseMouth implements the CloseMouth RPC.
 func (s *GpioMotorServer) CloseMouth(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
+	log.Print("Closing mouth")
 	err := s.gpioMotor.CloseMouth()
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "unable to close mouth: %v", zap.Error(err))
@@ -32,6 +34,7 @@ func (s *GpioMotorServer) CloseMouth(ctx context.Context, req *emptypb.Empty) (*
 
 // LowerHead implements the LowerHead RPC.
 func (s *GpioMotorServer) LowerHead(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
+	log.Print("Lowering head")
 	err := s.gpioMotor.LowerHead()
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "unable to lower head: %v", zap.Error(err))
@@ -41,6 +44,7 @@ func (s *GpioMotorServer) LowerHead(ctx context.Context, req *emptypb.Empty) (*e
 
 // LowerTail implements the LowerTail RPC.
 func (s *GpioMotorServer) LowerTail(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
+	log.Print("Lowering tail")
 	err := s.gpioMotor.LowerTail()
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "unable to lower tail: %v", zap.Error(err))
@@ -50,6 +54,7 @@ func (s *GpioMotorServer) LowerTail(ctx context.Context, req *emptypb.Empty) (*e
 
 // OpenMouth implements the OpenMouth RPC.
 func (s *GpioMotorServer) OpenMouth(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
+	log.Print("Opening mouth")
 	err := s.gpioMotor.OpenMouth()
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "unable to open mouth: %v", zap.Error(err))
@@ -59,6 +64,7 @@ func (s *GpioMotorServer) OpenMouth(ctx context.Context, req *emptypb.Empty) (*e
 
 // RaiseHead implements the RaiseHead RPC.
 func (s *GpioMotorServer) RaiseHead(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
+	log.Print("Raising head")
 	err := s.gpioMotor.RaiseHead()
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "unable to raise head: %v", zap.Error(err))
@@ -68,6 +74,7 @@ func (s *GpioMotorServer) RaiseHead(ctx context.Context, req *emptypb.Empty) (*e
 
 // RaiseTail implements the RaiseTail RPC.
 func (s *GpioMotorServer) RaiseTail(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
+	log.Print("Raising tail")
 	err := s.gpioMotor.RaiseTail()
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "unable to raise tail: %v", zap.Error(err))
@@ -77,6 +84,7 @@ func (s *GpioMotorServer) RaiseTail(ctx context.Context, req *emptypb.Empty) (*e
 
 // ResetAll implements the ResetAll RPC.
 func (s *GpioMotorServer) ResetAll(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
+	log.Print("Resetting all")
 	err := s.gpioMotor.ResetAll()
 	if err != nil {
 		return nil, status.Errorf(codes.Internal, "unable to reset all: %v", zap.Error(err))
