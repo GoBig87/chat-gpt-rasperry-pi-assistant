@@ -83,6 +83,23 @@ if [ ! -f "$env_file" ]; then
   touch "$env_file"
 fi
 
+# Build /var/lib/gpt/gpio.env file
+gpio_env_file="/var/lib/gpt/gpio.env"
+
+# Check if the file exists
+if [ ! -f "$gpio_env_file" ]; then
+  echo "File $gpio_env_file does not exist, creating it..."
+  touch "$gpio_env_file"
+fi
+
+# Check and add each environment variable
+check_variable "MOTOR_MOUTH_ENA" "21"
+check_variable "MOTOR_MOUTH_IN1" "22"
+check_variable "MOTOR_MOUTH_IN2" "23"
+check_variable "MOTOR_BODY_IN3" "24"
+check_variable "MOTOR_BODY_IN4" "25"
+check_variable "MOTOR_BODY_ENB" "26"
+
 # Check if the porcupine access key variable is present in the file
 porcupine_key="PORCUPINE_ACCESS_KEY"
 if ! grep -q "^$porcupine_key=" "$env_file" || [ -z "$(grep "^$porcupine_key=" "$env_file" | cut -d'=' -f2)" ]; then
@@ -166,3 +183,19 @@ else
   echo "service account file not found. exiting..."
   exit 1
 fi
+
+
+# Helper functions
+
+# Check if each environment variable exists in the file
+check_variable() {
+  local variable_name=$1
+  local variable_value=$2
+
+  if ! grep -q "^$variable_name=" "$gpio_env_file"; then
+    echo "$variable_name=$variable_value" >> "$gpio_env_file"
+    echo "Added $variable_name to $gpio_env_file"
+  else
+    echo "$variable_name already exists in $gpio_env_file"
+  fi
+}

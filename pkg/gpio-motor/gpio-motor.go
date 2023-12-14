@@ -69,7 +69,7 @@ func (g *GpioMotor) CloseMouth() error {
 
 	return nil
 }
-go	
+
 func (g *GpioMotor) LowerHead() error {
 	err := rpio.Open()
 	if err != nil {
