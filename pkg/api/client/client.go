@@ -9,9 +9,10 @@ import (
 type ApiClient struct {
 	Conn *grpc.ClientConn
 
+	GPT api.ChatGptServiceClient
+	MTR api.GpioMotorServiceClient
 	S2T api.SpeechToTextServiceClient
 	T2S api.TextToSpeechServiceClient
-	GPT api.ChatGptServiceClient
 }
 
 func NewApiClient() (*ApiClient, error) {
@@ -21,9 +22,10 @@ func NewApiClient() (*ApiClient, error) {
 	}
 	client := &ApiClient{
 		Conn: conn,
+		GPT:  api.NewChatGptServiceClient(conn),
+		MTR:  api.NewGpioMotorServiceClient(conn),
 		S2T:  api.NewSpeechToTextServiceClient(conn),
 		T2S:  api.NewTextToSpeechServiceClient(conn),
-		GPT:  api.NewChatGptServiceClient(conn),
 	}
 	return client, nil
 

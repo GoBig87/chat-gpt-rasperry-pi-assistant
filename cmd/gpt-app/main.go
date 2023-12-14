@@ -6,8 +6,10 @@ import (
 	porcupine "github.com/Picovoice/porcupine/binding/go/v2"
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
+	"google.golang.org/protobuf/types/known/emptypb"
 	"log"
 	"os"
+	"time"
 
 	api_client "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/api/client"
 	v1 "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/api/v1"
@@ -49,7 +51,7 @@ func main() {
 
 var rootCmd = &cobra.Command{
 	Use:           "app",
-	Short:         "Main application to handle speech-to-text and chat-gpt",
+	Short:         "Main application to handle speech-to-text, chat-gpt and text-to-speech",
 	SilenceErrors: true,
 	SilenceUsage:  true,
 	RunE: func(cmd *cobra.Command, args []string) error {
@@ -128,15 +130,42 @@ func run(ctx context.Context) {
 }
 
 func process(ctx context.Context) error {
+	// raise head to acknowledge wake word
+	_, err := client.MTR.RaiseHead(ctx, &emptypb.Empty{})
+	if err != nil {
+		return err
+	}
+	defer client.MTR.ResetAll(ctx, &emptypb.Empty{})
+
 	prompt, err := processSpeechToText(ctx)
 	if err != nil {
 		return err
 	}
+
+	done1 := make(chan struct{})
+	defer close(done1)
+	// Start a goroutine to raise and lower the tail
+	go wagTail(ctx, done1)
+
 	answer, err := processChatGptPrompt(ctx, prompt)
 	if err != nil {
 		return err
 	}
-	return processChatGptResponse(ctx, answer)
+	// Stop the goroutine
+	done1 <- struct{}{}
+
+	done2 := make(chan struct{})
+	defer close(done2)
+	// Start a goroutine to move mouth
+	go moveMouth(ctx, done2)
+
+	err = processChatGptResponse(ctx, answer)
+	if err != nil {
+		return err
+	}
+	// Stop the goroutine
+	done2 <- struct{}{}
+	return err
 }
 
 func processSpeechToText(ctx context.Context) (string, error) {
@@ -159,7 +188,7 @@ func processSpeechToText(ctx context.Context) (string, error) {
 		}
 		resp, err := clnt.Recv()
 		if err != nil {
-			log.Fatalf("error receiving speech: %v", err)
+			log.Printf("error receiving speech: %v", err)
 			return "", err
 		}
 		if !resp.Processing {
@@ -168,7 +197,7 @@ func processSpeechToText(ctx context.Context) (string, error) {
 		}
 	}
 	if text == "" {
-		log.Fatalf("text is empty")
+		log.Printf("text is empty")
 		return "", fmt.Errorf("text is empty")
 	}
 	log.Println("finished processing wake word")
@@ -188,7 +217,7 @@ func processChatGptPrompt(ctx context.Context, prompt string) (string, error) {
 	}
 	answer := resp.Response
 	if answer == "" {
-		log.Fatalf("response is empty")
+		log.Printf("response is empty")
 		return "", fmt.Errorf("response is empty")
 	}
 	log.Println("finished processing prompt")
@@ -213,7 +242,7 @@ func processChatGptResponse(ctx context.Context, response string) error {
 		}
 		resp, err := clnt.Recv()
 		if err != nil {
-			log.Fatalf("error receiving response: %v", err)
+			log.Printf("error receiving response: %v", err)
 			return err
 		}
 		if resp.Processed {
@@ -222,4 +251,70 @@ func processChatGptResponse(ctx context.Context, response string) error {
 	}
 	log.Println("finished processing response")
 	return nil
+}
+
+func wagTail(ctx context.Context, done chan struct{}) {
+	ticker := time.NewTicker(500 * time.Millisecond)
+	defer ticker.Stop()
+	_, err := client.MTR.LowerHead(ctx, &emptypb.Empty{})
+	if err != nil {
+		log.Printf("Error lowering head: %v", err)
+	}
+	for {
+		select {
+		case <-done:
+			if _, err := client.MTR.ResetAll(ctx, &emptypb.Empty{}); err != nil {
+				log.Printf("Error reseting: %v", err)
+			}
+			return
+		case <-ticker.C:
+			// Lower the tail
+			if _, err := client.MTR.LowerTail(ctx, &emptypb.Empty{}); err != nil {
+				log.Printf("Error lowering tail: %v", err)
+			}
+
+			// Sleep for half a second
+			time.Sleep(500 * time.Millisecond)
+
+			// Raise the tail
+			if _, err := client.MTR.RaiseTail(ctx, &emptypb.Empty{}); err != nil {
+				log.Printf("Error raising tail: %v", err)
+			}
+		}
+	}
+}
+
+func moveMouth(ctx context.Context, done chan struct{}) {
+	ticker := time.NewTicker(500 * time.Millisecond)
+	defer ticker.Stop()
+	if _, err := client.MTR.LowerTail(ctx, &emptypb.Empty{}); err != nil {
+		log.Printf("Error lowering tail: %v", err)
+	}
+
+	_, err := client.MTR.RaiseHead(ctx, &emptypb.Empty{})
+	if err != nil {
+		log.Printf("Error lowering head: %v", err)
+	}
+	for {
+		select {
+		case <-done:
+			if _, err := client.MTR.ResetAll(ctx, &emptypb.Empty{}); err != nil {
+				log.Printf("Error reseting: %v", err)
+			}
+			return
+		case <-ticker.C:
+			// Lower the tail
+			if _, err := client.MTR.OpenMouth(ctx, &emptypb.Empty{}); err != nil {
+				log.Printf("Error opening tail: %v", err)
+			}
+
+			// Sleep for half a second
+			time.Sleep(500 * time.Millisecond)
+
+			// Raise the tail
+			if _, err := client.MTR.CloseMouth(ctx, &emptypb.Empty{}); err != nil {
+				log.Printf("Error closing tail: %v", err)
+			}
+		}
+	}
 }
