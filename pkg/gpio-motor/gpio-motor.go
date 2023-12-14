@@ -160,8 +160,8 @@ func (g *GpioMotor) RaiseHead() error {
 	enablePin.High()
 
 	// Set the direction "forward"
-	in1Pin.High()
-	in2Pin.Low()
+	in1Pin.Low()
+	in2Pin.High()
 
 	return nil
 }
@@ -185,8 +185,8 @@ func (g *GpioMotor) RaiseTail() error {
 	enablePin.High()
 
 	// Set the direction "reverse"
-	in1Pin.Low()
-	in2Pin.High()
+	in1Pin.High()
+	in2Pin.Low()
 
 	return nil
 }
