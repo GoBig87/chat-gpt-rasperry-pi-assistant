@@ -61,6 +61,7 @@ func init() {
 	rootCmd.AddCommand(t2sCmd)
 	rootCmd.AddCommand(chatGptCmd)
 	rootCmd.AddCommand(wakeCmd)
+	rootCmd.AddCommand(gpioCmd)
 }
 
 func main() {

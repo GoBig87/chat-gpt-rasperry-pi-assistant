@@ -108,12 +108,12 @@ check_variable() {
 }
 
 # Check and add each environment variable
-check_variable $gpio_env_file "MOTOR_MOUTH_ENA" "21"
-check_variable $gpio_env_file "MOTOR_MOUTH_IN1" "22"
-check_variable $gpio_env_file "MOTOR_MOUTH_IN2" "23"
-check_variable $gpio_env_file "MOTOR_BODY_IN3" "24"
-check_variable $gpio_env_file "MOTOR_BODY_IN4" "25"
-check_variable $gpio_env_file "MOTOR_BODY_ENB" "26"
+check_variable $gpio_env_file "MOTOR_MOUTH_ENA" "29"
+check_variable $gpio_env_file "MOTOR_MOUTH_IN1" "31"
+check_variable $gpio_env_file "MOTOR_MOUTH_IN2" "33"
+check_variable $gpio_env_file "MOTOR_BODY_IN3" "35"
+check_variable $gpio_env_file "MOTOR_BODY_IN4" "37"
+check_variable $gpio_env_file "MOTOR_BODY_ENB" "32"
 
 # Check if the porcupine access key variable is present in the file
 porcupine_key="PORCUPINE_ACCESS_KEY"

@@ -3,6 +3,7 @@ package main
 import (
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 	"log"
 	"os"
 	"strconv"
@@ -72,7 +73,7 @@ func init() {
 	}
 	gpioMotor, err = gpio_motor.MakeNewGpioMotor(motorMouthEna, motorMouthIn1, motorMouthIn2, motorBodyEnb, motorBodyIn3, motorBodyIn4)
 	if err != nil {
-		log.Fatal("failed to create gpio motor")
+		log.Fatal("failed to create gpio motor", zap.Error(err))
 		return
 	}
 
