@@ -260,7 +260,9 @@ func wagTail(ctx context.Context, done chan struct{}) {
 	if err != nil {
 		log.Printf("Error lowering head: %v", err)
 	}
+	// Sleep for half a second
 	time.Sleep(500 * time.Millisecond)
+	raised := false
 	for {
 		select {
 		case <-done:
@@ -269,21 +271,22 @@ func wagTail(ctx context.Context, done chan struct{}) {
 			}
 			return
 		case <-ticker.C:
-			// Raise the tail
-			if _, err := client.MTR.RaiseTail(ctx, &emptypb.Empty{}); err != nil {
-				log.Printf("Error raising tail: %v", err)
+			if !raised {
+				// Raise the tail
+				if _, err := client.MTR.RaiseTail(ctx, &emptypb.Empty{}); err != nil {
+					log.Printf("Error raising tail: %v", err)
+				} else {
+					log.Print("Raised tail")
+					raised = true
+				}
 			} else {
-				log.Print("Raised tail")
-			}
-
-			// Sleep for half a second
-			time.Sleep(500 * time.Millisecond)
-
-			// Lower the tail
-			if _, err := client.MTR.ResetAll(ctx, &emptypb.Empty{}); err != nil {
-				log.Printf("Error lowering tail: %v", err)
-			} else {
-				log.Print("Lowered tail")
+				// Lower the tail
+				if _, err := client.MTR.LowerTail(ctx, &emptypb.Empty{}); err != nil {
+					log.Printf("Error lowering tail: %v", err)
+				} else {
+					log.Print("Lowered tail")
+					raised = false
+				}
 			}
 		}
 	}
@@ -300,7 +303,7 @@ func moveMouth(ctx context.Context, done chan struct{}) {
 	if err != nil {
 		log.Printf("Error lowering head: %v", err)
 	}
-	time.Sleep(500 * time.Millisecond)
+	opened := false
 	for {
 		select {
 		case <-done:
@@ -309,21 +312,20 @@ func moveMouth(ctx context.Context, done chan struct{}) {
 			}
 			return
 		case <-ticker.C:
-			// Lower the tail
-			if _, err := client.MTR.OpenMouth(ctx, &emptypb.Empty{}); err != nil {
-				log.Printf("Error opening tail: %v", err)
+			if !opened {
+				if _, err := client.MTR.OpenMouth(ctx, &emptypb.Empty{}); err != nil {
+					log.Printf("Error opening tail: %v", err)
+				} else {
+					log.Print("Opened mouth")
+					opened = true
+				}
 			} else {
-				log.Print("Opened mouth")
-			}
-
-			// Sleep for half a second
-			time.Sleep(500 * time.Millisecond)
-
-			// Raise the tail
-			if _, err := client.MTR.ResetAll(ctx, &emptypb.Empty{}); err != nil {
-				log.Printf("Error closing tail: %v", err)
-			} else {
-				log.Print("Closed mouth")
+				if _, err := client.MTR.ResetAll(ctx, &emptypb.Empty{}); err != nil {
+					log.Printf("Error closing tail: %v", err)
+				} else {
+					log.Print("Closed mouth")
+					opened = false
+				}
 			}
 		}
 	}
