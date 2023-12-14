@@ -254,12 +254,13 @@ func processChatGptResponse(ctx context.Context, response string) error {
 }
 
 func wagTail(ctx context.Context, done chan struct{}) {
-	ticker := time.NewTicker(2000 * time.Millisecond)
+	ticker := time.NewTicker(1000 * time.Millisecond)
 	defer ticker.Stop()
 	_, err := client.MTR.LowerHead(ctx, &emptypb.Empty{})
 	if err != nil {
 		log.Printf("Error lowering head: %v", err)
 	}
+	time.Sleep(1000 * time.Millisecond)
 	for {
 		select {
 		case <-done:
@@ -268,37 +269,38 @@ func wagTail(ctx context.Context, done chan struct{}) {
 			}
 			return
 		case <-ticker.C:
-			// Lower the tail
-			if _, err := client.MTR.LowerTail(ctx, &emptypb.Empty{}); err != nil {
-				log.Printf("Error lowering tail: %v", err)
-			} else {
-				log.Print("Lowered tail")
-			}
-
-			// Sleep for half a second
-			time.Sleep(2000 * time.Millisecond)
-
 			// Raise the tail
 			if _, err := client.MTR.RaiseTail(ctx, &emptypb.Empty{}); err != nil {
 				log.Printf("Error raising tail: %v", err)
 			} else {
 				log.Print("Raised tail")
 			}
+
+			// Sleep for half a second
+			time.Sleep(1000 * time.Millisecond)
+
+			// Lower the tail
+			if _, err := client.MTR.LowerTail(ctx, &emptypb.Empty{}); err != nil {
+				log.Printf("Error lowering tail: %v", err)
+			} else {
+				log.Print("Lowered tail")
+			}
 		}
 	}
 }
 
 func moveMouth(ctx context.Context, done chan struct{}) {
-	ticker := time.NewTicker(2000 * time.Millisecond)
+	ticker := time.NewTicker(1000 * time.Millisecond)
 	defer ticker.Stop()
 	if _, err := client.MTR.LowerTail(ctx, &emptypb.Empty{}); err != nil {
 		log.Printf("Error lowering tail: %v", err)
 	}
-
+	time.Sleep(1000 * time.Millisecond)
 	_, err := client.MTR.RaiseHead(ctx, &emptypb.Empty{})
 	if err != nil {
 		log.Printf("Error lowering head: %v", err)
 	}
+	time.Sleep(1000 * time.Millisecond)
 	for {
 		select {
 		case <-done:
@@ -315,7 +317,7 @@ func moveMouth(ctx context.Context, done chan struct{}) {
 			}
 
 			// Sleep for half a second
-			time.Sleep(2000 * time.Millisecond)
+			time.Sleep(1000 * time.Millisecond)
 
 			// Raise the tail
 			if _, err := client.MTR.CloseMouth(ctx, &emptypb.Empty{}); err != nil {
