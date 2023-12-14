@@ -96,6 +96,9 @@ github.com/spf13/cobra
 # github.com/spf13/pflag v1.0.5
 ## explicit; go 1.12
 github.com/spf13/pflag
+# github.com/stianeikeland/go-rpio v4.2.0+incompatible
+## explicit
+github.com/stianeikeland/go-rpio
 # go.opencensus.io v0.24.0
 ## explicit; go 1.13
 go.opencensus.io

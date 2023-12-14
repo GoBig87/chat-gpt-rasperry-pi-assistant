@@ -10,6 +10,7 @@ require (
 	github.com/hajimehoshi/go-mp3 v0.3.4
 	github.com/joho/godotenv v1.5.1
 	github.com/spf13/cobra v1.8.0
+	github.com/stianeikeland/go-rpio v4.2.0+incompatible
 	go.uber.org/zap v1.26.0
 	google.golang.org/grpc v1.59.0
 	google.golang.org/protobuf v1.31.0
