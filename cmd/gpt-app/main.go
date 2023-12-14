@@ -256,7 +256,7 @@ func processChatGptResponse(ctx context.Context, response string) error {
 func wagTail(ctx context.Context, done chan struct{}) {
 	ticker := time.NewTicker(500 * time.Millisecond)
 	defer ticker.Stop()
-	_, err := client.MTR.LowerHead(ctx, &emptypb.Empty{})
+	_, err := client.MTR.ResetAll(ctx, &emptypb.Empty{})
 	if err != nil {
 		log.Printf("Error lowering head: %v", err)
 	}
@@ -280,7 +280,7 @@ func wagTail(ctx context.Context, done chan struct{}) {
 			time.Sleep(500 * time.Millisecond)
 
 			// Lower the tail
-			if _, err := client.MTR.LowerTail(ctx, &emptypb.Empty{}); err != nil {
+			if _, err := client.MTR.ResetAll(ctx, &emptypb.Empty{}); err != nil {
 				log.Printf("Error lowering tail: %v", err)
 			} else {
 				log.Print("Lowered tail")
@@ -320,7 +320,7 @@ func moveMouth(ctx context.Context, done chan struct{}) {
 			time.Sleep(500 * time.Millisecond)
 
 			// Raise the tail
-			if _, err := client.MTR.CloseMouth(ctx, &emptypb.Empty{}); err != nil {
+			if _, err := client.MTR.ResetAll(ctx, &emptypb.Empty{}); err != nil {
 				log.Printf("Error closing tail: %v", err)
 			} else {
 				log.Print("Closed mouth")
