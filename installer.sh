@@ -1,22 +1,5 @@
 #!/bin/bash
 
-# Helper functions
-
-# Check if each environment variable exists in the file
-check_variable() {
-  local gpio_env_file=$1
-  local variable_name=$2
-  local variable_value=$3
-
-  if ! grep -q "^$variable_name=" "$gpio_env_file"; then
-    echo "$variable_name=$variable_value" >> "$gpio_env_file"
-    echo "Added $variable_name to $gpio_env_file"
-  else
-    echo "$variable_name already exists in $gpio_env_file"
-  fi
-}
-
-# Start install process
 # Install Golang
 go_desired_version="1.21.5"
 go_installed_version=$(go version | awk '{print $3}' | cut -c 3-)
@@ -108,6 +91,21 @@ if [ ! -f "$gpio_env_file" ]; then
   echo "File $gpio_env_file does not exist, creating it..."
   touch "$gpio_env_file"
 fi
+
+
+# Check if each environment variable exists in the file
+check_variable() {
+  local gpio_env_file=$1
+  local variable_name=$2
+  local variable_value=$3
+
+  if ! grep -q "^$variable_name=" "$gpio_env_file"; then
+    echo "$variable_name=$variable_value" >> "$gpio_env_file"
+    echo "Added $variable_name to $gpio_env_file"
+  else
+    echo "$variable_name already exists in $gpio_env_file"
+  fi
+}
 
 # Check and add each environment variable
 check_variable $gpio_env_file "MOTOR_MOUTH_ENA" "21"
