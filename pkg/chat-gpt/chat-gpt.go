@@ -68,7 +68,7 @@ func (c *ChatGptClient) PromptChatGPT(question string) (string, error) {
 	payload := &ChatGptRequest{
 		Model:    "gpt-3.5-turbo",
 		Messages: []RequestMessage{{Role: "assistant", Content: question}},
-		Stream:   true,
+		Stream:   false,
 	}
 
 	// Convert the payload to JSON
@@ -120,6 +120,7 @@ func (c *ChatGptClient) PromptChatGPT(question string) (string, error) {
 	// Extract the first choice from the array
 	var ret string
 	for _, choice := range response.Choices {
+		log.Printf("finish reason %s", choice.FinishReason)
 		ret = fmt.Sprintf("%s %s", ret, choice.Message.Content)
 	}
 	return ret, nil
