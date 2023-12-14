@@ -320,7 +320,7 @@ func moveMouth(ctx context.Context, done chan struct{}) {
 					opened = true
 				}
 			} else {
-				if _, err := client.MTR.ResetAll(ctx, &emptypb.Empty{}); err != nil {
+				if _, err := client.MTR.CloseMouth(ctx, &emptypb.Empty{}); err != nil {
 					log.Printf("Error closing tail: %v", err)
 				} else {
 					log.Print("Closed mouth")
