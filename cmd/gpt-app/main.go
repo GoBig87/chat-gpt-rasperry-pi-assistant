@@ -271,6 +271,8 @@ func wagTail(ctx context.Context, done chan struct{}) {
 			// Lower the tail
 			if _, err := client.MTR.LowerTail(ctx, &emptypb.Empty{}); err != nil {
 				log.Printf("Error lowering tail: %v", err)
+			} else {
+				log.Print("Lowered tail")
 			}
 
 			// Sleep for half a second
@@ -279,6 +281,8 @@ func wagTail(ctx context.Context, done chan struct{}) {
 			// Raise the tail
 			if _, err := client.MTR.RaiseTail(ctx, &emptypb.Empty{}); err != nil {
 				log.Printf("Error raising tail: %v", err)
+			} else {
+				log.Print("Raised tail")
 			}
 		}
 	}
@@ -306,6 +310,8 @@ func moveMouth(ctx context.Context, done chan struct{}) {
 			// Lower the tail
 			if _, err := client.MTR.OpenMouth(ctx, &emptypb.Empty{}); err != nil {
 				log.Printf("Error opening tail: %v", err)
+			} else {
+				log.Print("Opened mouth")
 			}
 
 			// Sleep for half a second
@@ -314,6 +320,8 @@ func moveMouth(ctx context.Context, done chan struct{}) {
 			// Raise the tail
 			if _, err := client.MTR.CloseMouth(ctx, &emptypb.Empty{}); err != nil {
 				log.Printf("Error closing tail: %v", err)
+			} else {
+				log.Print("Closed mouth")
 			}
 		}
 	}
