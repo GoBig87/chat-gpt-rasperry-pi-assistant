@@ -6,6 +6,11 @@ option go_package = "github.com/GoBig87/chat-gpt-rasperry-pi-assistant/pkg/api/v
 
 import "google/protobuf/empty.proto";
 
+message MoveMouthToSpeechRequest {
+  // signals to stop the mouth movement
+  bool stop = 1;
+}
+
 // The GPIO Motor API service
 //
 // This API handles the motor control of Billy Bass
@@ -21,6 +26,11 @@ service GpioMotorService {
 
   // OpenMouth opens the mouth.
   rpc OpenMouth(google.protobuf.Empty) returns (google.protobuf.Empty);
+
+  // MoveMouthToSpeed moves the mouth to detected speech.
+  //
+  // This is a streaming RPC that streams from the client on how long to detect speech.
+  rpc MoveMouthToSpeech(stream MoveMouthToSpeechRequest) returns (google.protobuf.Empty);
 
   // RaiseHead raises the head.
   rpc RaiseHead(google.protobuf.Empty) returns (google.protobuf.Empty);

@@ -52,6 +52,29 @@ func (s *GpioMotorServer) LowerTail(ctx context.Context, req *emptypb.Empty) (*e
 	return &emptypb.Empty{}, nil
 }
 
+func (s *GpioMotorServer) MoveMouthToSpeech(stream api.GpioMotorService_MoveMouthToSpeechServer) error {
+	for {
+		req, err := stream.Recv()
+		if err != nil {
+			log.Printf("Error receiving stream info: %v", err)
+			stream.SendAndClose(&emptypb.Empty{})
+			return status.Errorf(codes.Internal, "cannot receive stream info")
+		}
+		if req.Stop {
+			stream.SendAndClose(&emptypb.Empty{})
+			break
+		} else {
+			err = s.gpioMotor.MoveMouthToSpeech()
+			if err != nil {
+				log.Printf("Error moving mouth to speech: %v", err)
+				stream.SendAndClose(&emptypb.Empty{})
+				return status.Errorf(codes.Internal, "cannot move mouth to speech")
+			}
+		}
+	}
+	return nil
+}
+
 // OpenMouth implements the OpenMouth RPC.
 func (s *GpioMotorServer) OpenMouth(ctx context.Context, req *emptypb.Empty) (*emptypb.Empty, error) {
 	log.Print("Opening mouth")

@@ -254,6 +254,7 @@ func processChatGptResponse(ctx context.Context, response string) error {
 }
 
 func wagTail(ctx context.Context, done chan struct{}) {
+	// TODO move this to a GRPC stream
 	ticker := time.NewTicker(500 * time.Millisecond)
 	defer ticker.Stop()
 	_, err := client.MTR.ResetAll(ctx, &emptypb.Empty{})
@@ -276,7 +277,6 @@ func wagTail(ctx context.Context, done chan struct{}) {
 				if _, err := client.MTR.RaiseTail(ctx, &emptypb.Empty{}); err != nil {
 					log.Printf("Error raising tail: %v", err)
 				} else {
-					log.Print("Raised tail")
 					raised = true
 				}
 			} else {
@@ -284,7 +284,6 @@ func wagTail(ctx context.Context, done chan struct{}) {
 				if _, err := client.MTR.LowerTail(ctx, &emptypb.Empty{}); err != nil {
 					log.Printf("Error lowering tail: %v", err)
 				} else {
-					log.Print("Lowered tail")
 					raised = false
 				}
 			}
@@ -292,8 +291,8 @@ func wagTail(ctx context.Context, done chan struct{}) {
 	}
 }
 
-func moveMouth(ctx context.Context, done chan struct{}) {
-	ticker := time.NewTicker(500 * time.Millisecond)
+func moveMouth(ctx context.Context, done chan struct{}) error {
+	ticker := time.NewTicker(20 * time.Millisecond)
 	defer ticker.Stop()
 	if _, err := client.MTR.LowerTail(ctx, &emptypb.Empty{}); err != nil {
 		log.Printf("Error lowering tail: %v", err)
@@ -303,29 +302,40 @@ func moveMouth(ctx context.Context, done chan struct{}) {
 	if err != nil {
 		log.Printf("Error lowering head: %v", err)
 	}
-	opened := false
+	stream, err := client.MTR.MoveMouthToSpeech(ctx)
+	if err != nil {
+		log.Printf("Error creating moving mouth to speech stream: %v", err)
+		return err
+	}
+
 	for {
 		select {
 		case <-done:
+			req := &v1.MoveMouthToSpeechRequest{
+				Stop: true,
+			}
+			err = stream.Send(req)
+			if err != nil {
+				log.Printf("Error sending stop to stream: %v", err)
+				return err
+			}
+			_, err := stream.CloseAndRecv()
+			if err != nil {
+				log.Printf("Error closing stream: %v", err)
+				return err
+			}
 			if _, err := client.MTR.ResetAll(ctx, &emptypb.Empty{}); err != nil {
 				log.Printf("Error reseting: %v", err)
 			}
-			return
+			return nil
 		case <-ticker.C:
-			if !opened {
-				if _, err := client.MTR.OpenMouth(ctx, &emptypb.Empty{}); err != nil {
-					log.Printf("Error opening tail: %v", err)
-				} else {
-					log.Print("Opened mouth")
-					opened = true
-				}
-			} else {
-				if _, err := client.MTR.CloseMouth(ctx, &emptypb.Empty{}); err != nil {
-					log.Printf("Error closing tail: %v", err)
-				} else {
-					log.Print("Closed mouth")
-					opened = false
-				}
+			req := &v1.MoveMouthToSpeechRequest{
+				Stop: false,
+			}
+			err = stream.Send(req)
+			if err != nil {
+				log.Printf("Error sending stop to stream: %v", err)
+				return err
 			}
 		}
 	}

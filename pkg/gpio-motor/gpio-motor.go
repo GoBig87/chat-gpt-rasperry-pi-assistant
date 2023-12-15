@@ -3,18 +3,20 @@ package gpio_motor
 import (
 	"github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/utils"
 	"github.com/stianeikeland/go-rpio"
+	"time"
 )
 
 type GpioMotor struct {
-	HeadEnable int
-	HeadIN1    int
-	HeadIN2    int
-	BodyEnable int
-	BodyIN1    int
-	BodyIN2    int
+	HeadEnable    int
+	HeadIN1       int
+	HeadIN2       int
+	BodyEnable    int
+	BodyIN1       int
+	BodyIN2       int
+	AudioDetected int
 }
 
-func MakeNewGpioMotor(headEnable, headIn1, headIn2, bodyEnable, bodyIn1, bodyIn2 int) (*GpioMotor, error) {
+func MakeNewGpioMotor(headEnable, headIn1, headIn2, bodyEnable, bodyIn1, bodyIn2, audio int) (*GpioMotor, error) {
 	bcmHeadEnable, err := utils.PhysicalPinToBCM(headEnable)
 	if err != nil {
 		return nil, err
@@ -39,13 +41,18 @@ func MakeNewGpioMotor(headEnable, headIn1, headIn2, bodyEnable, bodyIn1, bodyIn2
 	if err != nil {
 		return nil, err
 	}
+	audioDetect, err := utils.PhysicalPinToBCM(audio)
+	if err != nil {
+		return nil, err
+	}
 	return &GpioMotor{
-		HeadEnable: bcmHeadEnable,
-		HeadIN1:    bcmHeadIn1,
-		HeadIN2:    bcmHeadIn2,
-		BodyEnable: bcmBodyEnable,
-		BodyIN1:    bcmBodyIn1,
-		BodyIN2:    bcmBodyIn2,
+		HeadEnable:    bcmHeadEnable,
+		HeadIN1:       bcmHeadIn1,
+		HeadIN2:       bcmHeadIn2,
+		BodyEnable:    bcmBodyEnable,
+		BodyIN1:       bcmBodyIn1,
+		BodyIN2:       bcmBodyIn2,
+		AudioDetected: audioDetect,
 	}, nil
 }
 
@@ -68,6 +75,17 @@ func (g *GpioMotor) CloseMouth() error {
 	in4Pin.Low()
 
 	return nil
+}
+
+func (g *GpioMotor) IsAudioDetected() (bool, error) {
+	err := rpio.Open()
+	if err != nil {
+		return false, err
+	}
+	defer rpio.Close()
+	audioPin := rpio.Pin(g.AudioDetected)
+	audioPin.Input()
+	return audioPin.Read() == rpio.High, nil
 }
 
 func (g *GpioMotor) LowerHead() error {
@@ -114,6 +132,31 @@ func (g *GpioMotor) LowerTail() error {
 	enablePin.Low()
 
 	return nil
+}
+
+func (g *GpioMotor) MoveMouthToSpeech() error {
+	// Run for 3 iterations, 30 ms to detect if between words
+	silenceCount := 0
+	for i := 0; i < 3; i++ {
+		detected, err := g.IsAudioDetected()
+		if err != nil {
+			return err
+		}
+		if detected {
+			silenceCount = 0
+		} else {
+			silenceCount++
+		}
+		time.Sleep(10 * time.Millisecond)
+	}
+
+	var err error
+	if silenceCount > 2 {
+		err = g.CloseMouth()
+	} else {
+		err = g.OpenMouth()
+	}
+	return err
 }
 
 func (g *GpioMotor) OpenMouth() error {

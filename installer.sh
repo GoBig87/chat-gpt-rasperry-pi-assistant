@@ -114,6 +114,7 @@ check_variable $gpio_env_file "MOTOR_MOUTH_IN2" "33"
 check_variable $gpio_env_file "MOTOR_BODY_IN3" "35"
 check_variable $gpio_env_file "MOTOR_BODY_IN4" "37"
 check_variable $gpio_env_file "MOTOR_BODY_ENB" "32"
+check_variable $gpio_env_file "AUDIO_DETECTOR" "36"
 
 # Check if the porcupine access key variable is present in the file
 porcupine_key="PORCUPINE_ACCESS_KEY"

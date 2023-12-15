@@ -31,6 +31,10 @@ type GpioMotorServiceClient interface {
 	LowerTail(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// OpenMouth opens the mouth.
 	OpenMouth(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
+	// MoveMouthToSpeed moves the mouth to detected speech.
+	//
+	// This is a streaming RPC that streams from the client on how long to detect speech.
+	MoveMouthToSpeech(ctx context.Context, opts ...grpc.CallOption) (GpioMotorService_MoveMouthToSpeechClient, error)
 	// RaiseHead raises the head.
 	RaiseHead(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error)
 	// RaiseTail raises the tail.
@@ -83,6 +87,40 @@ func (c *gpioMotorServiceClient) OpenMouth(ctx context.Context, in *emptypb.Empt
 	return out, nil
 }
 
+func (c *gpioMotorServiceClient) MoveMouthToSpeech(ctx context.Context, opts ...grpc.CallOption) (GpioMotorService_MoveMouthToSpeechClient, error) {
+	stream, err := c.cc.NewStream(ctx, &GpioMotorService_ServiceDesc.Streams[0], "/api.v1.gpio_motor.GpioMotorService/MoveMouthToSpeech", opts...)
+	if err != nil {
+		return nil, err
+	}
+	x := &gpioMotorServiceMoveMouthToSpeechClient{stream}
+	return x, nil
+}
+
+type GpioMotorService_MoveMouthToSpeechClient interface {
+	Send(*MoveMouthToSpeechRequest) error
+	CloseAndRecv() (*emptypb.Empty, error)
+	grpc.ClientStream
+}
+
+type gpioMotorServiceMoveMouthToSpeechClient struct {
+	grpc.ClientStream
+}
+
+func (x *gpioMotorServiceMoveMouthToSpeechClient) Send(m *MoveMouthToSpeechRequest) error {
+	return x.ClientStream.SendMsg(m)
+}
+
+func (x *gpioMotorServiceMoveMouthToSpeechClient) CloseAndRecv() (*emptypb.Empty, error) {
+	if err := x.ClientStream.CloseSend(); err != nil {
+		return nil, err
+	}
+	m := new(emptypb.Empty)
+	if err := x.ClientStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func (c *gpioMotorServiceClient) RaiseHead(ctx context.Context, in *emptypb.Empty, opts ...grpc.CallOption) (*emptypb.Empty, error) {
 	out := new(emptypb.Empty)
 	err := c.cc.Invoke(ctx, "/api.v1.gpio_motor.GpioMotorService/RaiseHead", in, out, opts...)
@@ -122,6 +160,10 @@ type GpioMotorServiceServer interface {
 	LowerTail(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// OpenMouth opens the mouth.
 	OpenMouth(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
+	// MoveMouthToSpeed moves the mouth to detected speech.
+	//
+	// This is a streaming RPC that streams from the client on how long to detect speech.
+	MoveMouthToSpeech(GpioMotorService_MoveMouthToSpeechServer) error
 	// RaiseHead raises the head.
 	RaiseHead(context.Context, *emptypb.Empty) (*emptypb.Empty, error)
 	// RaiseTail raises the tail.
@@ -146,6 +188,9 @@ func (UnimplementedGpioMotorServiceServer) LowerTail(context.Context, *emptypb.E
 }
 func (UnimplementedGpioMotorServiceServer) OpenMouth(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method OpenMouth not implemented")
+}
+func (UnimplementedGpioMotorServiceServer) MoveMouthToSpeech(GpioMotorService_MoveMouthToSpeechServer) error {
+	return status.Errorf(codes.Unimplemented, "method MoveMouthToSpeech not implemented")
 }
 func (UnimplementedGpioMotorServiceServer) RaiseHead(context.Context, *emptypb.Empty) (*emptypb.Empty, error) {
 	return nil, status.Errorf(codes.Unimplemented, "method RaiseHead not implemented")
@@ -241,6 +286,32 @@ func _GpioMotorService_OpenMouth_Handler(srv interface{}, ctx context.Context, d
 	return interceptor(ctx, in, info, handler)
 }
 
+func _GpioMotorService_MoveMouthToSpeech_Handler(srv interface{}, stream grpc.ServerStream) error {
+	return srv.(GpioMotorServiceServer).MoveMouthToSpeech(&gpioMotorServiceMoveMouthToSpeechServer{stream})
+}
+
+type GpioMotorService_MoveMouthToSpeechServer interface {
+	SendAndClose(*emptypb.Empty) error
+	Recv() (*MoveMouthToSpeechRequest, error)
+	grpc.ServerStream
+}
+
+type gpioMotorServiceMoveMouthToSpeechServer struct {
+	grpc.ServerStream
+}
+
+func (x *gpioMotorServiceMoveMouthToSpeechServer) SendAndClose(m *emptypb.Empty) error {
+	return x.ServerStream.SendMsg(m)
+}
+
+func (x *gpioMotorServiceMoveMouthToSpeechServer) Recv() (*MoveMouthToSpeechRequest, error) {
+	m := new(MoveMouthToSpeechRequest)
+	if err := x.ServerStream.RecvMsg(m); err != nil {
+		return nil, err
+	}
+	return m, nil
+}
+
 func _GpioMotorService_RaiseHead_Handler(srv interface{}, ctx context.Context, dec func(interface{}) error, interceptor grpc.UnaryServerInterceptor) (interface{}, error) {
 	in := new(emptypb.Empty)
 	if err := dec(in); err != nil {
@@ -331,6 +402,12 @@ var GpioMotorService_ServiceDesc = grpc.ServiceDesc{
 			Handler:    _GpioMotorService_ResetAll_Handler,
 		},
 	},
-	Streams:  []grpc.StreamDesc{},
+	Streams: []grpc.StreamDesc{
+		{
+			StreamName:    "MoveMouthToSpeech",
+			Handler:       _GpioMotorService_MoveMouthToSpeech_Handler,
+			ClientStreams: true,
+		},
+	},
 	Metadata: "api/v1/gpio-motor.proto",
 }
