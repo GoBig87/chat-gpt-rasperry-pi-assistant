@@ -291,7 +291,7 @@ func wagTail(ctx context.Context, done chan struct{}) {
 	}
 }
 
-func moveMouth(ctx context.Context, done chan struct{}) error {
+func moveMouth(ctx context.Context, done chan struct{}) {
 	ticker := time.NewTicker(20 * time.Millisecond)
 	defer ticker.Stop()
 	if _, err := client.MTR.LowerTail(ctx, &emptypb.Empty{}); err != nil {
@@ -305,7 +305,7 @@ func moveMouth(ctx context.Context, done chan struct{}) error {
 	stream, err := client.MTR.MoveMouthToSpeech(ctx)
 	if err != nil {
 		log.Printf("Error creating moving mouth to speech stream: %v", err)
-		return err
+		return
 	}
 
 	for {
@@ -317,17 +317,17 @@ func moveMouth(ctx context.Context, done chan struct{}) error {
 			err = stream.Send(req)
 			if err != nil {
 				log.Printf("Error sending stop to stream: %v", err)
-				return err
+				return
 			}
 			_, err := stream.CloseAndRecv()
 			if err != nil {
 				log.Printf("Error closing stream: %v", err)
-				return err
+				return
 			}
 			if _, err := client.MTR.ResetAll(ctx, &emptypb.Empty{}); err != nil {
 				log.Printf("Error reseting: %v", err)
 			}
-			return nil
+			return
 		case <-ticker.C:
 			req := &v1.MoveMouthToSpeechRequest{
 				Stop: false,
@@ -335,7 +335,7 @@ func moveMouth(ctx context.Context, done chan struct{}) error {
 			err = stream.Send(req)
 			if err != nil {
 				log.Printf("Error sending stop to stream: %v", err)
-				return err
+				return
 			}
 		}
 	}

@@ -141,6 +141,35 @@ var lowerTailCmd = &cobra.Command{
 	},
 }
 
+var moveMouthToSpeechCmd = &cobra.Command{
+	Use:   "mouth-to-speech ",
+	Short: "moves billy bass's mouth to speech  <duration (0 for continuous)>",
+	Args:  cobra.ExactArgs(0),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		duration, err := strconv.Atoi(args[0])
+		if err != nil {
+			log.Print("duration is not set, looping continuously")
+		}
+
+		initialTime := time.Now().Unix()
+		for {
+			err := gpioMotor.MoveMouthToSpeech()
+			if err != nil {
+				return err
+			}
+			currentTime := time.Now().Unix()
+			if duration > 0 {
+				diff := int(currentTime) - int(initialTime)
+				if diff >= duration {
+					log.Print("duration reached, exiting")
+					break
+				}
+			}
+		}
+		return nil
+	},
+}
+
 var openMouthCmd = &cobra.Command{
 	Use:   "open-mouth",
 	Short: "opens billy bass's mouth",
@@ -194,39 +223,29 @@ var resetAllCmd = &cobra.Command{
 }
 
 var testAudioDetectCmd = &cobra.Command{
-	Use:   "test-audio-detect <duration (seconds) optional>",
+	Use:   "test-audio-detect <duration (0 for continuous)>",
 	Short: "tests audio detection",
 	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
-		duration := 0
 		duration, err := strconv.Atoi(args[0])
 		if err != nil {
 			log.Print("duration is not set, looping continuously")
 		}
-		if duration > 0 {
-			intitialTime := time.Now().Unix()
-			for {
-				detected, err := gpioMotor.IsAudioDetected()
-				if err != nil {
-					return err
-				} else {
-					log.Printf("audio detection status: %v", detected)
-				}
+
+		initialTime := time.Now().Unix()
+		for {
+			detected, err := gpioMotor.IsAudioDetected()
+			if err != nil {
+				return err
+			} else {
+				log.Printf("audio detection status: %v", detected)
+			}
+			if duration > 0 {
 				currentTime := time.Now().Unix()
-				diff := int(currentTime) - int(intitialTime)
+				diff := int(currentTime) - int(initialTime)
 				if diff >= duration {
 					log.Print("duration reached, exiting")
 					break
-				}
-			}
-
-		} else {
-			for {
-				detected, err := gpioMotor.IsAudioDetected()
-				if err != nil {
-					return err
-				} else {
-					log.Printf("audio detection status: %v", detected)
 				}
 			}
 		}
