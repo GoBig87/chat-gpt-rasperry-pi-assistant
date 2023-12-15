@@ -3,6 +3,7 @@ package gpio_motor
 import (
 	"github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/utils"
 	"github.com/stianeikeland/go-rpio"
+	"log"
 	"time"
 )
 
@@ -137,7 +138,7 @@ func (g *GpioMotor) LowerTail() error {
 func (g *GpioMotor) MoveMouthToSpeech() error {
 	// Run for 3 iterations, 30 ms to detect if between words
 	silenceCount := 0
-	for i := 0; i < 3; i++ {
+	for i := 0; i < 5; i++ {
 		detected, err := g.IsAudioDetected()
 		if err != nil {
 			return err
@@ -151,9 +152,11 @@ func (g *GpioMotor) MoveMouthToSpeech() error {
 	}
 
 	var err error
-	if silenceCount > 2 {
+	if silenceCount > 4 {
+		log.Print("Closing mouth")
 		err = g.CloseMouth()
 	} else {
+		log.Print("Opening mouth")
 		err = g.OpenMouth()
 	}
 	return err
