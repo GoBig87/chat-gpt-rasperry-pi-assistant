@@ -143,9 +143,9 @@ var lowerTailCmd = &cobra.Command{
 }
 
 var moveMouthToSpeechCmd = &cobra.Command{
-	Use:   "mouth-to-speech ",
+	Use:   "mouth-to-speech <duration (0 for continuous)>",
 	Short: "moves billy bass's mouth to speech  <duration (0 for continuous)>",
-	Args:  cobra.ExactArgs(0),
+	Args:  cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		duration, err := strconv.Atoi(args[0])
 		if err != nil {
