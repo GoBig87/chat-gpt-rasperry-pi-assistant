@@ -3,7 +3,6 @@ package gpio_motor
 import (
 	"github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/utils"
 	"github.com/stianeikeland/go-rpio"
-	"log"
 	"time"
 )
 
@@ -144,7 +143,6 @@ func (g *GpioMotor) MoveMouthToSpeech() error {
 			return err
 		}
 		if !detected {
-			log.Printf("Silence detected incrementing silence count %d", silenceCount)
 			silenceCount++
 		}
 		time.Sleep(10 * time.Millisecond)
@@ -152,10 +150,8 @@ func (g *GpioMotor) MoveMouthToSpeech() error {
 
 	var err error
 	if silenceCount >= 4 {
-		log.Print("Closing mouth")
 		err = g.CloseMouth()
 	} else {
-		log.Print("Opening mouth")
 		err = g.OpenMouth()
 	}
 	return err

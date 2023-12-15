@@ -95,11 +95,11 @@ func init() {
 	gpioCmd.AddCommand(closeMouthCmd)
 	gpioCmd.AddCommand(lowerHeadCmd)
 	gpioCmd.AddCommand(lowerTailCmd)
-	gpioCmd.AddCommand(moveMouthToSpeechCmd)
 	gpioCmd.AddCommand(openMouthCmd)
 	gpioCmd.AddCommand(raiseHeadCmd)
 	gpioCmd.AddCommand(raiseTailCmd)
 	gpioCmd.AddCommand(resetAllCmd)
+	gpioCmd.AddCommand(speechToMovementCmd)
 	gpioCmd.AddCommand(testAudioDetectCmd)
 }
 
@@ -137,35 +137,6 @@ var lowerTailCmd = &cobra.Command{
 		err := gpioMotor.LowerTail()
 		if err != nil {
 			return err
-		}
-		return nil
-	},
-}
-
-var moveMouthToSpeechCmd = &cobra.Command{
-	Use:   "mouth-to-speech <duration (0 for continuous)>",
-	Short: "moves billy bass's mouth to speech  <duration (0 for continuous)>",
-	Args:  cobra.ExactArgs(1),
-	RunE: func(cmd *cobra.Command, args []string) error {
-		duration, err := strconv.Atoi(args[0])
-		if err != nil {
-			log.Print("duration is not set, looping continuously")
-		}
-
-		initialTime := time.Now().Unix()
-		for {
-			err := gpioMotor.MoveMouthToSpeech()
-			if err != nil {
-				return err
-			}
-			currentTime := time.Now().Unix()
-			if duration > 0 {
-				diff := int(currentTime) - int(initialTime)
-				if diff >= duration {
-					log.Print("duration reached, exiting")
-					break
-				}
-			}
 		}
 		return nil
 	},
@@ -218,6 +189,35 @@ var resetAllCmd = &cobra.Command{
 		err := gpioMotor.ResetAll()
 		if err != nil {
 			return err
+		}
+		return nil
+	},
+}
+
+var speechToMovementCmd = &cobra.Command{
+	Use:   "speech-to-movement <duration (0 for continuous)>",
+	Short: "moves billy bass's mouth to speech  <duration (0 for continuous)>",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		duration, err := strconv.Atoi(args[0])
+		if err != nil {
+			log.Print("duration is not set, looping continuously")
+		}
+
+		initialTime := time.Now().Unix()
+		for {
+			err := gpioMotor.MoveMouthToSpeech()
+			if err != nil {
+				return err
+			}
+			currentTime := time.Now().Unix()
+			if duration > 0 {
+				diff := int(currentTime) - int(initialTime)
+				if diff >= duration {
+					log.Print("duration reached, exiting")
+					break
+				}
+			}
 		}
 		return nil
 	},
