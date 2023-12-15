@@ -25,6 +25,7 @@ var (
 	motorBodyIn3       int
 	motorBodyIn4       int
 	motorBodyEnb       int
+	audioDetect        int
 	gpioMotor          *gpio_motor.GpioMotor
 )
 
@@ -97,7 +98,20 @@ func init() {
 		log.Fatal("MOTOR_BODY_ENB is not set")
 		return
 	}
-	gpioMotor, err = gpio_motor.MakeNewGpioMotor(motorMouthEna, motorMouthIn1, motorMouthIn2, motorBodyEnb, motorBodyIn3, motorBodyIn4)
+	audioDetectStr := os.Getenv("AUDIO_DETECTOR")
+	audioDetect, err = strconv.Atoi(audioDetectStr)
+	if err != nil {
+		log.Fatal("AUDIO_DETECT is not set")
+		return
+	}
+	gpioMotor, err = gpio_motor.MakeNewGpioMotor(
+		motorMouthEna,
+		motorMouthIn1,
+		motorMouthIn2,
+		motorBodyEnb,
+		motorBodyIn3,
+		motorBodyIn4,
+		audioDetect)
 	if err != nil {
 		log.Fatal("failed to create gpio motor", zap.Error(err))
 		return

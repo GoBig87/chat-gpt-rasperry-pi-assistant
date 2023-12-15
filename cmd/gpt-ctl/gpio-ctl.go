@@ -7,6 +7,7 @@ import (
 	"log"
 	"os"
 	"strconv"
+	"time"
 
 	gpio_motor "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/gpio-motor"
 )
@@ -23,6 +24,7 @@ var (
 	motorBodyIn3  int
 	motorBodyIn4  int
 	motorBodyEnb  int
+	audioDetect   int
 	gpioMotor     *gpio_motor.GpioMotor
 )
 
@@ -71,7 +73,20 @@ func init() {
 		log.Fatal("MOTOR_BODY_ENB is not set")
 		return
 	}
-	gpioMotor, err = gpio_motor.MakeNewGpioMotor(motorMouthEna, motorMouthIn1, motorMouthIn2, motorBodyEnb, motorBodyIn3, motorBodyIn4)
+	audioDetectStr := os.Getenv("AUDIO_DETECTOR")
+	audioDetect, err = strconv.Atoi(audioDetectStr)
+	if err != nil {
+		log.Fatal("AUDIO_DETECT is not set")
+		return
+	}
+	gpioMotor, err = gpio_motor.MakeNewGpioMotor(
+		motorMouthEna,
+		motorMouthIn1,
+		motorMouthIn2,
+		motorBodyEnb,
+		motorBodyIn3,
+		motorBodyIn4,
+		audioDetect)
 	if err != nil {
 		log.Fatal("failed to create gpio motor", zap.Error(err))
 		return
@@ -84,6 +99,7 @@ func init() {
 	gpioCmd.AddCommand(raiseHeadCmd)
 	gpioCmd.AddCommand(raiseTailCmd)
 	gpioCmd.AddCommand(resetAllCmd)
+	gpioCmd.AddCommand(testAudioDetectCmd)
 }
 
 var closeMouthCmd = &cobra.Command{
@@ -172,6 +188,47 @@ var resetAllCmd = &cobra.Command{
 		err := gpioMotor.ResetAll()
 		if err != nil {
 			return err
+		}
+		return nil
+	},
+}
+
+var testAudioDetectCmd = &cobra.Command{
+	Use:   "test-audio-detect <duration (seconds) optional>",
+	Short: "tests audio detection",
+	Args:  cobra.ExactArgs(1),
+	RunE: func(cmd *cobra.Command, args []string) error {
+		duration := 0
+		duration, err := strconv.Atoi(args[0])
+		if err != nil {
+			log.Print("duration is not set, looping continuously")
+		}
+		if duration > 0 {
+			intitialTime := time.Now().Unix()
+			for {
+				detected, err := gpioMotor.IsAudioDetected()
+				if err != nil {
+					return err
+				} else {
+					log.Printf("audio detection status: %v", detected)
+				}
+				currentTime := time.Now().Unix()
+				diff := int(currentTime) - int(intitialTime)
+				if diff >= duration {
+					log.Print("duration reached, exiting")
+					break
+				}
+			}
+
+		} else {
+			for {
+				detected, err := gpioMotor.IsAudioDetected()
+				if err != nil {
+					return err
+				} else {
+					log.Printf("audio detection status: %v", detected)
+				}
+			}
 		}
 		return nil
 	},
