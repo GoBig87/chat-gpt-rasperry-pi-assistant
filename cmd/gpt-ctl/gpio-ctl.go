@@ -95,6 +95,7 @@ func init() {
 	gpioCmd.AddCommand(closeMouthCmd)
 	gpioCmd.AddCommand(lowerHeadCmd)
 	gpioCmd.AddCommand(lowerTailCmd)
+	gpioCmd.AddCommand(moveMouthToSpeechCmd)
 	gpioCmd.AddCommand(openMouthCmd)
 	gpioCmd.AddCommand(raiseHeadCmd)
 	gpioCmd.AddCommand(raiseTailCmd)
