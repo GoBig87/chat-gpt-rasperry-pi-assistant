@@ -151,7 +151,7 @@ func (g *GpioMotor) MoveMouthToSpeech() error {
 	}
 
 	var err error
-	if silenceCount > 4 {
+	if silenceCount >= 4 {
 		log.Print("Closing mouth")
 		err = g.CloseMouth()
 	} else {
