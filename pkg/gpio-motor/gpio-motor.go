@@ -86,7 +86,7 @@ func (g *GpioMotor) IsAudioDetected() (bool, error) {
 	defer rpio.Close()
 	audioPin := rpio.Pin(g.AudioDetected)
 	audioPin.Input()
-	return audioPin.Read() == rpio.High, nil
+	return audioPin.Read() == rpio.Low, nil
 }
 
 func (g *GpioMotor) LowerHead() error {
