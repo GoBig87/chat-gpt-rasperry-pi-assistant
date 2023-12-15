@@ -144,6 +144,7 @@ func (g *GpioMotor) MoveMouthToSpeech() error {
 			return err
 		}
 		if !detected {
+			log.Printf("Silence detected incrementing silence count %d", silenceCount)
 			silenceCount++
 		}
 		time.Sleep(10 * time.Millisecond)
