@@ -203,7 +203,7 @@ fi
 # check if the open ai organization id variable is present in the file
 google_application_creds="GOOGLE_APPLICATION_CREDS"
 if ! grep -q "^$google_application_creds=" "$env_file" || [ -z "$(grep "^$google_application_creds=" "$env_file" | cut -d'=' -f2)" ]; then
-  echo "$google_application_creds=google_application_creds" >> "$env_file"
+  echo "$google_application_creds=$filename" >> "$env_file"
   echo "Added google application creds to $env_file"
 fi
 
