@@ -173,21 +173,16 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}) (porcupine.
 		return "", err
 	}
 	defer func() {
-		if err := device.Stop(); err != nil {
-			log.Print("Error stopping device", zap.Error(err))
-		}
+		device.Uninit()
 	}()
 
 	for {
 		select {
 		case <-stopCh:
 			finishedProcessing = true
-			_ = device.Stop()
-			device.Uninit()
 			return "", nil
 		default:
 			if finishedProcessing {
-				device.Uninit()
 				return keyword, err
 			}
 		}
