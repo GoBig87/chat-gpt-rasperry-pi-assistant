@@ -6,8 +6,33 @@ import (
 	porcupine "github.com/Picovoice/porcupine/binding/go/v2"
 	"github.com/gen2brain/malgo"
 	"go.uber.org/zap"
+	"io/ioutil"
 	"log"
+	"path/filepath"
 )
+
+func CollectKeywords() ([]string, error) {
+	dir := "/var/lib/gpt/wake-words"
+	var ppnFiles []string
+
+	files, err := ioutil.ReadDir(dir)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, file := range files {
+		if file.IsDir() {
+			continue
+		}
+
+		// Check if the file has a ".ppn" extension
+		if filepath.Ext(file.Name()) == ".ppn" {
+			ppnFiles = append(ppnFiles, filepath.Join(dir, file.Name()))
+		}
+	}
+
+	return ppnFiles, nil
+}
 
 func DetectWakeWord(accessKey string) (porcupine.BuiltInKeyword, error) {
 	var err error
@@ -28,11 +53,14 @@ func DetectWakeWord(accessKey string) (porcupine.BuiltInKeyword, error) {
 	deviceConfig.Capture.Channels = 1
 	deviceConfig.SampleRate = 16000
 
+	paths, err := CollectKeywords()
+	if err != nil {
+		return "", err
+	}
 	p := porcupine.Porcupine{
 		BuiltInKeywords: []porcupine.BuiltInKeyword{porcupine.HEY_GOOGLE, porcupine.BUMBLEBEE},
-		// TODO move this
-		//KeywordPaths: []string{"./Hey-Billy-Bass_en_raspberry-pi_v3_0_0.ppn"},
-		AccessKey: accessKey,
+		KeywordPaths:    paths,
+		AccessKey:       accessKey,
 	}
 	err = p.Init()
 	if err != nil {
@@ -119,11 +147,15 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}, resultCh ch
 	deviceConfig.Capture.Channels = 1
 	deviceConfig.SampleRate = 16000
 
+	paths, err := CollectKeywords()
+	if err != nil {
+		errCh <- err
+		return
+	}
 	p := porcupine.Porcupine{
 		BuiltInKeywords: []porcupine.BuiltInKeyword{porcupine.HEY_GOOGLE, porcupine.BUMBLEBEE},
-		// TODO move this
-		//KeywordPaths: []string{"./Hey-Billy-Bass_en_raspberry-pi_v3_0_0.ppn"},
-		AccessKey: accessKey,
+		KeywordPaths:    paths,
+		AccessKey:       accessKey,
 	}
 	err = p.Init()
 	if err != nil {

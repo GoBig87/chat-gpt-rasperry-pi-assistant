@@ -132,7 +132,7 @@ func run(ctx context.Context) {
 func detectWakeWord(ctx context.Context) (porcupine.BuiltInKeyword, error) {
 	stream, err := client.WW.DetectWakeWord(ctx, &emptypb.Empty{})
 	if err != nil {
-		log.Printf("Error creating moving mouth to speech stream: %v", err)
+		log.Printf("Error creating wake word stream: %v", err)
 		return "", err
 	}
 	for {
