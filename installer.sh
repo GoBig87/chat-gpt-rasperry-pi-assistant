@@ -95,15 +95,15 @@ fi
 
 # Check if each environment variable exists in the file
 check_variable() {
-  local gpio_env_file=$1
+  local env_file=$1
   local variable_name=$2
   local variable_value=$3
 
-  if ! grep -q "^$variable_name=" "$gpio_env_file"; then
-    echo "$variable_name=$variable_value" >> "$gpio_env_file"
-    echo "Added $variable_name to $gpio_env_file"
+  if ! grep -q "^$variable_name=" "$env_file"; then
+    echo "$variable_name=$variable_value" >> "$env_file"
+    echo "Added $variable_name to $env_file"
   else
-    echo "$variable_name already exists in $gpio_env_file"
+    echo "$variable_name already exists in $env_file"
   fi
 }
 
@@ -200,4 +200,10 @@ else
   exit 1
 fi
 
+# check if the open ai organization id variable is present in the file
+google_application_creds="GOOGLE_APPLICATION_CREDS"
+if ! grep -q "^$google_application_creds=" "$env_file" || [ -z "$(grep "^$google_application_creds=" "$env_file" | cut -d'=' -f2)" ]; then
+  echo "$google_application_creds=google_application_creds" >> "$env_file"
+  echo "Added google application creds to $env_file"
+fi
 

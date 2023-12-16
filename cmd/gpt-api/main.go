@@ -53,6 +53,16 @@ func init() {
 		log.Fatal("CHAT_GPT_ORG_ID is not set")
 		return
 	}
+	googleAppCreds := os.Getenv("GOOGLE_APPLICATION_CREDS")
+	if googleAppCreds == "" {
+		log.Fatal("GOOGLE_APPLICATION_CREDS is not set")
+		return
+	}
+
+	err = os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", googleAppCreds)
+	if err != nil {
+		log.Fatal("Error setting GOOGLE_APPLICATION_CREDENTIALS", zap.Error(err))
+	}
 
 	err = godotenv.Load("/var/lib/gpt/gpio.env")
 	if err != nil {

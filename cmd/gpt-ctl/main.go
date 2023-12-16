@@ -4,6 +4,7 @@ import (
 	"fmt"
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
+	"go.uber.org/zap"
 	"log"
 	"os"
 
@@ -50,6 +51,18 @@ func init() {
 		log.Fatal("CHAT_GPT_ORG_ID is not set")
 		return
 	}
+
+	googleAppCreds := os.Getenv("GOOGLE_APPLICATION_CREDS")
+	if googleAppCreds == "" {
+		log.Fatal("GOOGLE_APPLICATION_CREDS is not set")
+		return
+	}
+
+	err = os.Setenv("GOOGLE_APPLICATION_CREDENTIALS", googleAppCreds)
+	if err != nil {
+		log.Fatal("Error setting GOOGLE_APPLICATION_CREDENTIALS", zap.Error(err))
+	}
+
 	rootCmd.InitDefaultHelpCmd()
 	walk(rootCmd, func(c *cobra.Command) {
 		if c.Name() == "help" {
