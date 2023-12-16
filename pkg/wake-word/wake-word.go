@@ -2,6 +2,7 @@ package wake_word
 
 import (
 	"encoding/binary"
+	"fmt"
 	porcupine "github.com/Picovoice/porcupine/binding/go/v2"
 	"github.com/gen2brain/malgo"
 	"go.uber.org/zap"
@@ -180,7 +181,7 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}) (porcupine.
 		select {
 		case <-stopCh:
 			finishedProcessing = true
-			return "", nil
+			return "", fmt.Errorf("stopped by external signal")
 		default:
 			if finishedProcessing {
 				return keyword, err
