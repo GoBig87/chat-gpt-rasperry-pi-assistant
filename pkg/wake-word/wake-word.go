@@ -100,7 +100,7 @@ func DetectWakeWord(accessKey string) (porcupine.BuiltInKeyword, error) {
 
 // DetectWakeWordRoutine this is the same as DetectWakeWord, but it takes a stop channel so that it can be stopped
 // by an external signal
-func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}) (porcupine.BuiltInKeyword, error) {
+func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}, resultCh chan<- porcupine.BuiltInKeyword, errCh chan<- error) {
 	var err error
 	backends := []malgo.Backend{malgo.BackendAlsa}
 	context, err := malgo.InitContext(backends, malgo.ContextConfig{}, func(message string) {
@@ -127,7 +127,8 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}) (porcupine.
 	}
 	err = p.Init()
 	if err != nil {
-		return "", err
+		errCh <- err
+		return
 	}
 	defer p.Delete()
 
@@ -166,13 +167,15 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}) (porcupine.
 	device, err := malgo.InitDevice(context.Context, deviceConfig, captureCallbacks)
 	if err != nil {
 		log.Print("Error on init device", zap.Error(err))
-		return "", err
+		errCh <- err
+		return
 	}
 
 	err = device.Start()
 	if err != nil {
 		log.Print("Error on start device", zap.Error(err))
-		return "", err
+		errCh <- err
+		return
 	}
 	defer func() {
 		device.Uninit()
@@ -182,13 +185,15 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}) (porcupine.
 		select {
 		case <-stopCh:
 			finishedProcessing = true
-			return "", fmt.Errorf("stopped by external signal")
+			errCh <- fmt.Errorf("stopped by external signal")
+			return
 		default:
 			if finishedProcessing {
 				if keyword == porcupine.HEY_GOOGLE {
 					fmt.Printf("Hey Google detected!\n %s", keyword)
 				}
-				return keyword, err // gets returned here but empty
+				resultCh <- keyword
+				return
 			}
 		}
 	}

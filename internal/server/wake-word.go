@@ -3,6 +3,7 @@ package server
 import (
 	"github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/api/v1"
 	ww "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/wake-word"
+	porcupine "github.com/Picovoice/porcupine/binding/go/v2"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -24,30 +25,28 @@ type WakeWordServer struct {
 
 func (s *WakeWordServer) DetectWakeWord(req *emptypb.Empty, stream api.WakeWordService_DetectWakeWordServer) error {
 	stopCh := make(chan struct{})
-	wakeWordDetectedCh := make(chan string)
+	resultCh := make(chan porcupine.BuiltInKeyword)
+	errCh := make(chan error)
 	var wg sync.WaitGroup
 	wg.Add(1)
 
 	// Run DetectWakeWordRoutine in a Goroutine
-	go func() {
-		defer wg.Done()
-
-		wakeWord, err := ww.DetectWakeWordRoutine(s.accessKey, stopCh)
-		if err != nil {
-			log.Printf("Error in DetectWakeWordRoutine: %v", err)
-		}
-		wakeWordDetectedCh <- string(wakeWord)
-	}()
+	go ww.DetectWakeWordRoutine(s.accessKey, stopCh, resultCh, errCh)
 
 	for {
 		// check to see if a wake word was detected
 		// Check if a wake word was detected
 		select {
-		case detectedKeyword := <-wakeWordDetectedCh:
-			log.Printf("Wake word %s detected!", detectedKeyword)
+		case err := <-errCh:
+			log.Printf("Error detecting wake word: %v", err)
+			close(stopCh)
+			wg.Wait()
+			return nil
+		case detectedKeyword := <-resultCh:
+			log.Printf("Wake word %s detected!", string(detectedKeyword))
 			// Handle the wake word detection as needed
 			resp := &api.WakeWordResponse{
-				BuiltInKeyword: detectedKeyword,
+				BuiltInKeyword: string(detectedKeyword),
 				CustomKeyword:  "",
 				Detected:       true,
 			}
