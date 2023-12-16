@@ -34,7 +34,7 @@ func CollectKeywords() ([]string, error) {
 	return ppnFiles, nil
 }
 
-func DetectWakeWord(accessKey string) (porcupine.BuiltInKeyword, error) {
+func DetectWakeWord(accessKey string) (string, error) {
 	var err error
 	backends := []malgo.Backend{malgo.BackendAlsa}
 	context, err := malgo.InitContext(backends, malgo.ContextConfig{}, func(message string) {
