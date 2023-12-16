@@ -48,6 +48,8 @@ func (s *WakeWordServer) DetectWakeWord(req *emptypb.Empty, stream api.WakeWordS
 			// Handle the wake word detection as needed
 			resp := &api.WakeWordResponse{
 				BuiltInKeyword: detectedKeyword,
+				CustomKeyword:  "",
+				Detected:       true,
 			}
 			if err := stream.Send(resp); err != nil {
 				log.Printf("Error sending built in keyword stream info: %v", err)
