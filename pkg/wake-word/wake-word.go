@@ -110,11 +110,6 @@ func DetectWakeWord(accessKey string) (string, error) {
 		log.Print("Error on start device", zap.Error(err))
 		return "", err
 	}
-	defer func() {
-		if err := device.Stop(); err != nil {
-			log.Print("Error stopping device", zap.Error(err))
-		}
-	}()
 
 	for {
 		if finishedProcessing {
