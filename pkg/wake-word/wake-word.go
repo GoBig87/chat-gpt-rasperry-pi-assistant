@@ -133,8 +133,11 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}, resultCh ch
 		log.Print("malgo failed to init", zap.Error(err))
 	}
 	defer func() {
-		_ = context.Uninit()
+		err = context.Uninit()
 		context.Free()
+		if err != nil {
+			log.Print("Error on uninit context", zap.Error(err))
+		}
 	}()
 
 	deviceConfig := malgo.DefaultDeviceConfig(malgo.Duplex)

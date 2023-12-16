@@ -49,12 +49,12 @@ func (s *WakeWordServer) DetectWakeWord(req *emptypb.Empty, stream api.WakeWordS
 				CustomKeyword:  "",
 				Detected:       true,
 			}
+			close(stopCh)
+			wg.Wait()
 			if err := stream.Send(resp); err != nil {
 				log.Printf("Error sending built in keyword stream info: %v", err)
 				return status.Errorf(codes.Internal, "Error sending stream info: %v", err)
 			}
-			close(stopCh)
-			wg.Wait()
 			return nil
 		default:
 			// No wake word detected yet, continue processing other data
@@ -64,9 +64,9 @@ func (s *WakeWordServer) DetectWakeWord(req *emptypb.Empty, stream api.WakeWordS
 				Detected:       false,
 			}
 			if err := stream.Send(resp); err != nil {
-				log.Printf("Error sending default stream info: %v", err)
 				close(stopCh)
 				wg.Wait()
+				log.Printf("Error sending default stream info: %v", err)
 				return status.Errorf(codes.Internal, "Error sending stream info: %v", err)
 			}
 		}
