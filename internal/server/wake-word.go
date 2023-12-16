@@ -44,7 +44,7 @@ func (s *WakeWordServer) DetectWakeWord(req *emptypb.Empty, stream api.WakeWordS
 		// Check if a wake word was detected
 		select {
 		case detectedKeyword := <-wakeWordDetectedCh:
-			log.Println("Wake word detected!")
+			log.Printf("Wake word %s detected!", detectedKeyword)
 			// Handle the wake word detection as needed
 			resp := &api.WakeWordResponse{
 				BuiltInKeyword: detectedKeyword,
