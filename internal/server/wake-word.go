@@ -3,7 +3,6 @@ package server
 import (
 	"github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/api/v1"
 	ww "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/wake-word"
-	porcupine "github.com/Picovoice/porcupine/binding/go/v3"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
@@ -25,7 +24,7 @@ type WakeWordServer struct {
 
 func (s *WakeWordServer) DetectWakeWord(req *emptypb.Empty, stream api.WakeWordService_DetectWakeWordServer) error {
 	stopCh := make(chan struct{})
-	resultCh := make(chan porcupine.BuiltInKeyword)
+	resultCh := make(chan string)
 	errCh := make(chan error)
 	var wg sync.WaitGroup
 	wg.Add(1)

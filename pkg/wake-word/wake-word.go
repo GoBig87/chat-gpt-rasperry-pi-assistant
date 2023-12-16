@@ -128,7 +128,7 @@ func DetectWakeWord(accessKey string) (string, error) {
 
 // DetectWakeWordRoutine this is the same as DetectWakeWord, but it takes a stop channel so that it can be stopped
 // by an external signal
-func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}, resultCh chan<- porcupine.BuiltInKeyword, errCh chan<- error) {
+func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}, resultCh chan<- string, errCh chan<- error) {
 	var err error
 	backends := []malgo.Backend{malgo.BackendAlsa}
 	context, err := malgo.InitContext(backends, malgo.ContextConfig{}, func(message string) {
@@ -153,9 +153,9 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}, resultCh ch
 		return
 	}
 	p := porcupine.Porcupine{
-		BuiltInKeywords: []porcupine.BuiltInKeyword{porcupine.HEY_GOOGLE, porcupine.BUMBLEBEE},
-		KeywordPaths:    paths,
-		AccessKey:       accessKey,
+		//BuiltInKeywords: []porcupine.BuiltInKeyword{porcupine.HEY_GOOGLE, porcupine.BUMBLEBEE},
+		KeywordPaths: paths,
+		AccessKey:    accessKey,
 	}
 	err = p.Init()
 	if err != nil {
@@ -167,7 +167,7 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}, resultCh ch
 	var shortBufIndex, shortBufOffset int
 	shortBuf := make([]int16, porcupine.FrameLength)
 
-	var keyword porcupine.BuiltInKeyword
+	var keyword string
 	finishedProcessing := false
 	onRecvFrames := func(pSample2, pSample []byte, framecount uint32) {
 		for i := 0; i < len(pSample); i += 2 {
@@ -183,8 +183,8 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}, resultCh ch
 				} else {
 					if keywordIndex >= 0 {
 						finishedProcessing = true
-						keyword = p.BuiltInKeywords[keywordIndex]
-						log.Printf("Keyword detected: %v", string(keyword))
+						keyword = p.KeywordPaths[keywordIndex]
+						log.Printf("Keyword detected: %v", keyword)
 					}
 				}
 			}
@@ -221,9 +221,6 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}, resultCh ch
 			return
 		default:
 			if finishedProcessing {
-				if keyword == porcupine.HEY_GOOGLE {
-					fmt.Printf("Hey Google detected!\n %s", keyword)
-				}
 				resultCh <- keyword
 				return
 			}

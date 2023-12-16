@@ -65,66 +65,14 @@ func run(ctx context.Context) {
 	for {
 		// 1. Wake word
 		log.Println("Listening for wake word...")
-		keyword, err := detectWakeWord(ctx)
+		_, err := detectWakeWord(ctx)
 		if err != nil {
 			log.Printf("Error detecting wake word: %v", err)
 			continue
 		}
-		switch keyword {
-		case porcupine.ALEXA:
-			log.Printf("Unimplemnted wake word: %v", keyword)
-			continue
-		case porcupine.AMERICANO:
-			log.Printf("Unimplemnted wake word: %v", keyword)
-			continue
-		case porcupine.BLUEBERRY:
-			log.Printf("Unimplemnted wake word: %v", keyword)
-			continue
-		case porcupine.BUMBLEBEE:
-			err := process(ctx)
-			if err != nil {
-				fmt.Printf("Error processing: %v", err)
-			}
-			continue
-		case porcupine.COMPUTER:
-			log.Printf("Unimplemnted wake word: %v", keyword)
-			continue
-		case porcupine.GRAPEFRUIT:
-			log.Printf("Unimplemnted wake word: %v", keyword)
-			continue
-		case porcupine.GRASSHOPPER:
-			log.Printf("Unimplemnted wake word: %v", keyword)
-			continue
-		case porcupine.HEY_GOOGLE:
-			err := process(ctx)
-			if err != nil {
-				fmt.Printf("Error processing: %v", err)
-			}
-			continue
-		case porcupine.HEY_SIRI:
-			log.Printf("Unimplemnted wake word: %v", keyword)
-			continue
-		case porcupine.JARVIS:
-			log.Printf("Unimplemnted wake word: %v", keyword)
-			continue
-		case porcupine.OK_GOOGLE:
-			err := process(ctx)
-			if err != nil {
-				fmt.Printf("Error processing: %v", err)
-			}
-			continue
-		case porcupine.PICOVOICE:
-			log.Printf("Unimplemnted wake word: %v", keyword)
-			continue
-		case porcupine.PORCUPINE:
-			log.Printf("Unimplemnted wake word: %v", keyword)
-			continue
-		case porcupine.TERMINATOR:
-			log.Printf("Unimplemnted wake word: %v", keyword)
-			continue
-		default:
-			log.Printf("Unknown wake word: %v", keyword)
-			continue
+		err = process(ctx)
+		if err != nil {
+			fmt.Printf("Error processing: %v", err)
 		}
 	}
 }
