@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [ "$(id -u)" -eq 0 ] || [[ $EUID -eq 0 ]]; then
+  echo "This script should not be run as root!"
+  exit 1
+fi
+
 # Install Golang
 go_desired_version="1.21.5"
 go_installed_version=$(go version | awk '{print $3}' | cut -c 3-)
@@ -188,6 +193,7 @@ for json_file in "${json_files[@]}"; do
   fi
 done
 
+# after finding the latest json file, copy it to the gpt directory
 if [ -n "$selected_json" ]; then
   filename="$gpt_dir/$(basename "$selected_json")"
   echo "Found service account file: $filename"
@@ -200,10 +206,16 @@ else
   exit 1
 fi
 
-# check if the open ai organization id variable is present in the file
+# add the location of the service account file to the config.env file
 google_application_creds="GOOGLE_APPLICATION_CREDS"
 if ! grep -q "^$google_application_creds=" "$env_file" || [ -z "$(grep "^$google_application_creds=" "$env_file" | cut -d'=' -f2)" ]; then
   echo "$google_application_creds=$filename" >> "$env_file"
   echo "Added google application creds to $env_file"
 fi
 
+# make the wake word dir
+wake_word_dir="/var/lib/gpt/wake-words"
+if [ ! -d "$wake_word_dir" ]; then
+  echo "Creating wake word directory $wake_word_dir"
+  mkdir -p "$wake_word_dir"
+fi

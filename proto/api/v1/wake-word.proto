@@ -1,0 +1,24 @@
+syntax = "proto3";
+
+package api.v1.gpio_motor;
+
+option go_package = "github.com/GoBig87/chat-gpt-rasperry-pi-assistant/pkg/api/v1;api;";
+
+import "google/protobuf/empty.proto";
+
+message WakeWordResponse {
+  // signals that the wake word was detected
+  string builtInKeyword   = 1;
+  string customKeyword    = 2;
+  bool   detected         = 3;
+}
+
+// The Wake Word API service
+//
+// This API handles the wake word detection
+service WakeWordService {
+  // WakeWord listens for the wake word
+  //
+  // This is a streaming RPC that streams from the client waiting for the wake word to be detected.
+  rpc DetectWakeWord(google.protobuf.Empty) returns (stream WakeWordResponse);
+}

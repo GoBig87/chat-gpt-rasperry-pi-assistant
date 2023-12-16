@@ -16,6 +16,7 @@ import (
 )
 
 var (
+	porcupineAccessKey string
 	chatGptApiEndpoint string
 	chatGptApiKey      string
 	chatGptOrgID       string
@@ -37,6 +38,11 @@ func init() {
 			log.Fatal("Error loading .env file")
 			return
 		}
+	}
+	porcupineAccessKey = os.Getenv("PORCUPINE_ACCESS_KEY")
+	if porcupineAccessKey == "" {
+		log.Fatal("PORCUPINE_ACCESS_KEY is not set")
+		return
 	}
 	chatGptApiEndpoint = os.Getenv("CHAT_GPT_API_ENDPOINT")
 	if chatGptApiEndpoint == "" {
@@ -161,6 +167,7 @@ func runGrpcServer() error {
 	api.RegisterGpioMotorServiceServer(grpcServer, server.MakeGpioMotorServer(gpioMotor))
 	api.RegisterSpeechToTextServiceServer(grpcServer, server.MakeSpeechToTextServer())
 	api.RegisterTextToSpeechServiceServer(grpcServer, server.MakeTextToSpeechServer())
+	api.RegisterWakeWordServiceServer(grpcServer, server.MakeWakeWordServer(porcupineAccessKey))
 
 	lis, err := net.Listen("tcp", grpcEndpoint)
 	if err != nil {

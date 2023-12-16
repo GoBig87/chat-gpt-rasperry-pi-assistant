@@ -13,6 +13,7 @@ type ApiClient struct {
 	MTR api.GpioMotorServiceClient
 	S2T api.SpeechToTextServiceClient
 	T2S api.TextToSpeechServiceClient
+	WW  api.WakeWordServiceClient
 }
 
 func NewApiClient() (*ApiClient, error) {
@@ -26,6 +27,7 @@ func NewApiClient() (*ApiClient, error) {
 		MTR:  api.NewGpioMotorServiceClient(conn),
 		S2T:  api.NewSpeechToTextServiceClient(conn),
 		T2S:  api.NewTextToSpeechServiceClient(conn),
+		WW:   api.NewWakeWordServiceClient(conn),
 	}
 	return client, nil
 

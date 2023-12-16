@@ -65,7 +65,7 @@ func run(ctx context.Context) {
 	for {
 		// 1. Wake word
 		log.Println("Listening for wake word...")
-		keyword, err := ww.DetectWakeWord(accessKey)
+		keyword, err := detectWakeWord(ctx)
 		if err != nil {
 			log.Printf("Error detecting wake word: %v", err)
 			continue
@@ -126,6 +126,26 @@ func run(ctx context.Context) {
 			log.Printf("Unknown wake word: %v", keyword)
 			continue
 		}
+	}
+}
+
+func detectWakeWord(ctx context.Context) (porcupine.BuiltInKeyword, error) {
+	stream, err := client.WW.DetectWakeWord(ctx, &emptypb.Empty{})
+	if err != nil {
+		log.Printf("Error creating moving mouth to speech stream: %v", err)
+		return "", err
+	}
+	for {
+		resp, err := stream.Recv()
+		if err != nil {
+			log.Printf("Error receiving wake word, stop to stream: %v", err)
+			return "", err
+		}
+		if resp.Detected {
+			log.Printf("Wake word detected: %v", resp.BuiltInKeyword)
+			return ww.StringToBuiltInKeyword(resp.BuiltInKeyword), nil
+		}
+		time.Sleep(250 * time.Millisecond)
 	}
 }
 
