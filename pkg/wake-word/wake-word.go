@@ -184,6 +184,9 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}) (porcupine.
 			return "", fmt.Errorf("stopped by external signal")
 		default:
 			if finishedProcessing {
+				if keyword == porcupine.HEY_GOOGLE {
+					fmt.Printf("Hey Google detected!\n %s", keyword)
+				}
 				return keyword, err
 			}
 		}
