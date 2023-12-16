@@ -151,6 +151,7 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}) (porcupine.
 					if keywordIndex >= 0 {
 						finishedProcessing = true
 						keyword = p.BuiltInKeywords[keywordIndex]
+						log.Printf("Keyword detected: %v", string(keyword))
 					}
 				}
 			}
@@ -187,7 +188,7 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}) (porcupine.
 				if keyword == porcupine.HEY_GOOGLE {
 					fmt.Printf("Hey Google detected!\n %s", keyword)
 				}
-				return keyword, err
+				return keyword, err // gets returned here but empty
 			}
 		}
 	}
