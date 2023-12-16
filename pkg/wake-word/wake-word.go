@@ -179,10 +179,12 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}) (porcupine.
 	for {
 		select {
 		case <-stopCh:
+			log.Println("wake word stopping channel")
 			finishedProcessing = true
 			return "", nil
 		default:
 			if finishedProcessing {
+				log.Printf("process finished, wake word detected: %v", keyword)
 				return keyword, err
 			}
 		}
