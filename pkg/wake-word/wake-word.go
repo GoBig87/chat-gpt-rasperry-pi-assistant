@@ -58,9 +58,9 @@ func DetectWakeWord(accessKey string) (porcupine.BuiltInKeyword, error) {
 		return "", err
 	}
 	p := porcupine.Porcupine{
-		BuiltInKeywords: []porcupine.BuiltInKeyword{porcupine.HEY_GOOGLE, porcupine.BUMBLEBEE},
-		KeywordPaths:    paths,
-		AccessKey:       accessKey,
+		//BuiltInKeywords: []porcupine.BuiltInKeyword{porcupine.HEY_GOOGLE, porcupine.BUMBLEBEE},
+		KeywordPaths: paths,
+		AccessKey:    accessKey,
 	}
 	err = p.Init()
 	if err != nil {
@@ -71,7 +71,7 @@ func DetectWakeWord(accessKey string) (porcupine.BuiltInKeyword, error) {
 	var shortBufIndex, shortBufOffset int
 	shortBuf := make([]int16, porcupine.FrameLength)
 
-	var keyword porcupine.BuiltInKeyword
+	var keyword string //porcupine.BuiltInKeyword
 	finishedProcessing := false
 	onRecvFrames := func(pSample2, pSample []byte, framecount uint32) {
 		for i := 0; i < len(pSample); i += 2 {
@@ -87,7 +87,7 @@ func DetectWakeWord(accessKey string) (porcupine.BuiltInKeyword, error) {
 				} else {
 					if keywordIndex >= 0 {
 						finishedProcessing = true
-						keyword = p.BuiltInKeywords[keywordIndex]
+						keyword = p.KeywordPaths[keywordIndex]
 					}
 				}
 			}

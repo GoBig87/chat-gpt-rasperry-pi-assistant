@@ -86,7 +86,7 @@ func main() {
 }
 
 var rootCmd = &cobra.Command{
-	Use:           "gptctl",
+	Use:           "gpt-ctl",
 	Short:         "control commands",
 	SilenceErrors: true,
 	SilenceUsage:  true,
