@@ -3,7 +3,7 @@ package wake_word
 import (
 	"encoding/binary"
 	"fmt"
-	porcupine "github.com/Picovoice/porcupine/binding/go/v2"
+	porcupine "github.com/Picovoice/porcupine/binding/go/v3"
 	"github.com/gen2brain/malgo"
 	"go.uber.org/zap"
 	"io/ioutil"

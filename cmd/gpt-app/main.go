@@ -3,7 +3,7 @@ package main
 import (
 	"context"
 	"fmt"
-	porcupine "github.com/Picovoice/porcupine/binding/go/v2"
+	porcupine "github.com/Picovoice/porcupine/binding/go/v3"
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 	"google.golang.org/protobuf/types/known/emptypb"

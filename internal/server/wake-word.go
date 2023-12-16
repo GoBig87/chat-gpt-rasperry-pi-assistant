@@ -3,7 +3,7 @@ package server
 import (
 	"github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/api/v1"
 	ww "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/wake-word"
-	porcupine "github.com/Picovoice/porcupine/binding/go/v2"
+	porcupine "github.com/Picovoice/porcupine/binding/go/v3"
 	"google.golang.org/grpc/codes"
 	"google.golang.org/grpc/status"
 	"google.golang.org/protobuf/types/known/emptypb"
