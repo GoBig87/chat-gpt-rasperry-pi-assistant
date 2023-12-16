@@ -219,3 +219,5 @@ if [ ! -d "$wake_word_dir" ]; then
   echo "Creating wake word directory $wake_word_dir"
   mkdir -p "$wake_word_dir"
 fi
+
+cp wake-words/* "$wake_word_dir"
