@@ -179,12 +179,10 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}) (porcupine.
 	for {
 		select {
 		case <-stopCh:
-			log.Println("wake word stopping channel")
 			finishedProcessing = true
 			return "", nil
 		default:
 			if finishedProcessing {
-				log.Printf("process finished, wake word detected: %v", keyword)
 				return keyword, err
 			}
 		}
@@ -193,33 +191,33 @@ func DetectWakeWordRoutine(accessKey string, stopCh <-chan struct{}) (porcupine.
 
 func StringToBuiltInKeyword(keyword string) porcupine.BuiltInKeyword {
 	switch keyword {
-	case "ALEXA":
+	case string(porcupine.ALEXA):
 		return porcupine.ALEXA
-	case "AMERICANO":
+	case string(porcupine.AMERICANO):
 		return porcupine.AMERICANO
-	case "BLUEBERRY":
+	case string(porcupine.BLUEBERRY):
 		return porcupine.BLUEBERRY
-	case "BUMBLEBEE":
+	case string(porcupine.BUMBLEBEE):
 		return porcupine.BUMBLEBEE
-	case "COMPUTER":
+	case string(porcupine.COMPUTER):
 		return porcupine.COMPUTER
-	case "GRAPEFRUIT":
+	case string(porcupine.GRAPEFRUIT):
 		return porcupine.GRAPEFRUIT
-	case "GRASSHOPPER":
+	case string(porcupine.GRASSHOPPER):
 		return porcupine.GRASSHOPPER
-	case "HEY_GOOGLE":
+	case string(porcupine.HEY_GOOGLE):
 		return porcupine.HEY_GOOGLE
-	case "HEY_SIRI":
+	case string(porcupine.HEY_SIRI):
 		return porcupine.HEY_SIRI
-	case "JARVIS":
+	case string(porcupine.JARVIS):
 		return porcupine.JARVIS
-	case "OK_GOOGLE":
+	case string(porcupine.OK_GOOGLE):
 		return porcupine.OK_GOOGLE
-	case "PICOVOICE":
+	case string(porcupine.PICOVOICE):
 		return porcupine.PICOVOICE
-	case "PORCUPINE":
+	case string(porcupine.PORCUPINE):
 		return porcupine.PORCUPINE
-	case "TERMINATOR":
+	case string(porcupine.TERMINATOR):
 		return porcupine.TERMINATOR
 	default:
 		return porcupine.PORCUPINE

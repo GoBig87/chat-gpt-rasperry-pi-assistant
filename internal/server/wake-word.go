@@ -36,7 +36,6 @@ func (s *WakeWordServer) DetectWakeWord(req *emptypb.Empty, stream api.WakeWordS
 		if err != nil {
 			log.Printf("Error in DetectWakeWordRoutine: %v", err)
 		}
-		log.Printf("Wake word %s detected!", string(wakeWord))
 		wakeWordDetectedCh <- string(wakeWord)
 	}()
 
