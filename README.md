@@ -24,3 +24,8 @@ Tools needed
 1. Dremel or similar small cutting tool
 2. Drill
 3. Hot glue gun
+
+# Schematics
+![schematics](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/855c0575-70c5-4457-a99a-b8d1326866f8)
+
+
