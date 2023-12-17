@@ -19,13 +19,32 @@ Parts
 12. Bread Board leads (https://www.amazon.com/EDGELEC-Breadboard-Optional-Assorted-Multicolored/dp/B07GD2BWPY/ref=sr_1_3?crid=1JYT2UF3EZS2E&th=1)
 13. Standoffs and mounting hardware (https://www.amazon.com/dp/B07PHBTTGV?psc=1&ref=ppx_yo2ov_dt_b_product_details)  
 15. Bluetooth Keyboard (https://www.amazon.com/Bluetooth-Wireless-Keyboard-Multi-Device-Desktop-Black/dp/B0C4JSGJQ5/ref=sr_1_5?crid=2EJBEYSFHJUFY)
+16. A Billy Bass signing fish (https://www.amazon.com/dp/B09NT16S23?psc=1&ref=ppx_yo2ov_dt_b_product_details)
 
 Tools needed
 1. Dremel or similar small cutting tool
 2. Drill
 3. Hot glue gun
+4. Wire strippers
 
 # Schematics
+![schematics](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/49c2fc3b-7f3d-4afe-a5f9-1bd1bb857400)
 
-![schematics](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/1207a702-742f-4993-8e74-1a43980aa14e)
+# Preparation
+![IMG_4343](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/9fa4195b-b738-4483-b64d-e30c6ea61e86)
+
+## Step 1
+Remove the screws on the back side of the Billy Bass fish and remove the AA batteries.  Open the fish cautiously and be mindful of the attached cables.
+
+## Step 2
+Disconnect the cables attached to the circuit board.  Remove the screws that hold the circuit board in place and discard it.  After removing the ciruit board, use a small dremel or similar cutting wheel to remove the plastic standoffs to create more space inside of the fish.
+
+## Step 3
+Remove the motion sensor and activation button by unscrewing the screws that hold them into place.  
+
+## Step 4 
+Allong the the top side there are plastic flares that will need to be removed in order to fit the raspberry pi.  With a cutting tool, carefully trim the flares down making sure to not cut or damage the edges of the case.
+
+## Step 5 
+With wire strippers, trim the motor wires off of the electrical wire adapters.  
 
