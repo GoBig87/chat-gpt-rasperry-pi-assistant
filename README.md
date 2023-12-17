@@ -33,18 +33,24 @@ Tools needed
 # Preparation
 ![IMG_4343](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/9fa4195b-b738-4483-b64d-e30c6ea61e86)
 
-## Step 1
+### Step 1
 Remove the screws on the back side of the Billy Bass fish and remove the AA batteries.  Open the fish cautiously and be mindful of the attached cables.
 
-## Step 2
+### Step 2
 Disconnect the cables attached to the circuit board.  Remove the screws that hold the circuit board in place and discard it.  After removing the ciruit board, use a small dremel or similar cutting wheel to remove the plastic standoffs to create more space inside of the fish.
 
-## Step 3
+### Step 3
 Remove the motion sensor and activation button by unscrewing the screws that hold them into place.  
 
-## Step 4 
+### Step 4 
 Allong the the top side there are plastic flares that will need to be removed in order to fit the raspberry pi.  With a cutting tool, carefully trim the flares down making sure to not cut or damage the edges of the case.
 
-## Step 5 
-With wire strippers, trim the motor wires off of the electrical wire adapters.  
+### Step 5 
+With wire strippers, trim the motor wires off of the electrical wire adapters.  There will be a pair of wires for each motor.  The red and gray wire pair controls the mouth.  Strip the wires and connect to a DC female plug (Part 11) via the screw clamp bindings.  The red wire should be attached to the negative terminal and gray to the positive terminal.  The black and orange pair control the body and tail.  Connect the black wire to the positive termianl of a DC female plug and the orange to the negative terminal.
+
+### Step 6
+![IMG_4344](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/419d5224-40ca-42ae-9f9d-48b67bbe7ec9)
+MAKE SURE TO REMOVE THE ALL AA BATTERIES BEFORE THIS STEP!!! FAILURE TO DO SO WILL RESULT IN A NOT SO GOOD TIME!!!
+With a cutting tool, cut out the backside/inside of the battery compartment from the inside.  You will want to leave the walls alone.  Be warned that you will be hitting some small metal parts of the battery connection system.  Once you have the backside/inside taken off, slowly trim out the upper wall to allow for cables to be routed through.
+
 
