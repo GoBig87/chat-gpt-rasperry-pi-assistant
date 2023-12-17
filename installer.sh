@@ -226,8 +226,8 @@ cp wake-words/* "$wake_word_dir"
 USERNAME=$USER
 
 # Replace <user> with $USERNAME in the service files
-sed "s/<user>/$USERNAME/g" gpt-api.service > packaging/gpt-api.service.tmp
-sed "s/<user>/$USERNAME/g" gpt-app.service > packaging/gpt-app.service.tmp
+sed "s/<user>/$USERNAME/g" packaging/gpt-api.service > gpt-api.service.tmp
+sed "s/<user>/$USERNAME/g" packaging/gpt-app.service > gpt-app.service.tmp
 
 # Copy the modified service files to /etc/systemd/system/
 sudo cp gpt-api.service.tmp /etc/systemd/system/gpt-api.service
