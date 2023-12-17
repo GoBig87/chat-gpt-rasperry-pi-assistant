@@ -230,8 +230,8 @@ sed "s/<user>/$USERNAME/g" gpt-api.service > gpt-api.service.tmp
 sed "s/<user>/$USERNAME/g" gpt-app.service > gpt-app.service.tmp
 
 # Copy the modified service files to /etc/systemd/system/
-sudo cp ./packaging/gpt-api.service.tmp /etc/systemd/system/gpt-api.service
-sudo cp ./packaging/gpt-app.service.tmp /etc/systemd/system/gpt-app.service
+sudo cp packaging/gpt-api.service.tmp /etc/systemd/system/gpt-api.service
+sudo cp packaging/gpt-app.service.tmp /etc/systemd/system/gpt-app.service
 
 # Reload systemd to pick up the changes
 sudo systemctl daemon-reload
