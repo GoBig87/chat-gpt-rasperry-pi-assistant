@@ -2,7 +2,7 @@ package gpio_motor
 
 import (
 	"github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/utils"
-	"github.com/stianeikeland/go-rpio"
+	rpio "github.com/warthog618/gpio"
 	"time"
 )
 
@@ -62,9 +62,9 @@ func (g *GpioMotor) CloseMouth() error {
 		return err
 	}
 	defer rpio.Close()
-	enableHeadPin := rpio.Pin(g.HeadEnable)
-	in3Pin := rpio.Pin(g.HeadIN1)
-	in4Pin := rpio.Pin(g.HeadIN2)
+	enableHeadPin := rpio.NewPin(g.HeadEnable)
+	in3Pin := rpio.NewPin(g.HeadIN1)
+	in4Pin := rpio.NewPin(g.HeadIN2)
 
 	enableHeadPin.Output()
 	in3Pin.Output()
@@ -83,7 +83,7 @@ func (g *GpioMotor) IsAudioDetected() (bool, error) {
 		return false, err
 	}
 	defer rpio.Close()
-	audioPin := rpio.Pin(g.AudioDetected)
+	audioPin := rpio.NewPin(g.AudioDetected)
 	audioPin.Input()
 	return audioPin.Read() == rpio.Low, nil
 }
@@ -95,9 +95,9 @@ func (g *GpioMotor) LowerHead() error {
 	}
 	defer rpio.Close()
 
-	enablePin := rpio.Pin(g.BodyEnable)
-	in1Pin := rpio.Pin(g.BodyIN1)
-	in2Pin := rpio.Pin(g.BodyIN2)
+	enablePin := rpio.NewPin(g.BodyEnable)
+	in1Pin := rpio.NewPin(g.BodyIN1)
+	in2Pin := rpio.NewPin(g.BodyIN2)
 
 	enablePin.Output()
 	in1Pin.Output()
@@ -118,9 +118,9 @@ func (g *GpioMotor) LowerTail() error {
 	}
 	defer rpio.Close()
 
-	enablePin := rpio.Pin(g.BodyEnable)
-	in1Pin := rpio.Pin(g.BodyIN1)
-	in2Pin := rpio.Pin(g.BodyIN2)
+	enablePin := rpio.NewPin(g.BodyEnable)
+	in1Pin := rpio.NewPin(g.BodyIN1)
+	in2Pin := rpio.NewPin(g.BodyIN2)
 
 	enablePin.Output()
 	in1Pin.Output()
@@ -164,9 +164,9 @@ func (g *GpioMotor) OpenMouth() error {
 	}
 	defer rpio.Close()
 
-	enableHeadPin := rpio.Pin(g.HeadEnable)
-	in3Pin := rpio.Pin(g.HeadIN1)
-	in4Pin := rpio.Pin(g.HeadIN2)
+	enableHeadPin := rpio.NewPin(g.HeadEnable)
+	in3Pin := rpio.NewPin(g.HeadIN1)
+	in4Pin := rpio.NewPin(g.HeadIN2)
 
 	enableHeadPin.Output()
 	in3Pin.Output()
@@ -189,9 +189,9 @@ func (g *GpioMotor) RaiseHead() error {
 	}
 	defer rpio.Close()
 
-	enablePin := rpio.Pin(g.BodyEnable)
-	in1Pin := rpio.Pin(g.BodyIN1)
-	in2Pin := rpio.Pin(g.BodyIN2)
+	enablePin := rpio.NewPin(g.BodyEnable)
+	in1Pin := rpio.NewPin(g.BodyIN1)
+	in2Pin := rpio.NewPin(g.BodyIN2)
 
 	enablePin.Output()
 	in1Pin.Output()
@@ -214,9 +214,9 @@ func (g *GpioMotor) RaiseTail() error {
 	}
 	defer rpio.Close()
 
-	enablePin := rpio.Pin(g.BodyEnable)
-	in1Pin := rpio.Pin(g.BodyIN1)
-	in2Pin := rpio.Pin(g.BodyIN2)
+	enablePin := rpio.NewPin(g.BodyEnable)
+	in1Pin := rpio.NewPin(g.BodyIN1)
+	in2Pin := rpio.NewPin(g.BodyIN2)
 
 	enablePin.Output()
 	in1Pin.Output()
@@ -239,13 +239,13 @@ func (g *GpioMotor) ResetAll() error {
 	}
 	defer rpio.Close()
 
-	enableBodyPin := rpio.Pin(g.BodyEnable)
-	in1Pin := rpio.Pin(g.BodyIN1)
-	in2Pin := rpio.Pin(g.BodyIN2)
+	enableBodyPin := rpio.NewPin(g.BodyEnable)
+	in1Pin := rpio.NewPin(g.BodyIN1)
+	in2Pin := rpio.NewPin(g.BodyIN2)
 
-	enableHeadPin := rpio.Pin(g.HeadEnable)
-	in3Pin := rpio.Pin(g.HeadIN1)
-	in4Pin := rpio.Pin(g.HeadIN2)
+	enableHeadPin := rpio.NewPin(g.HeadEnable)
+	in3Pin := rpio.NewPin(g.HeadIN1)
+	in4Pin := rpio.NewPin(g.HeadIN2)
 
 	enableBodyPin.Output()
 	in1Pin.Output()

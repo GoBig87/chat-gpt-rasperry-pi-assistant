@@ -5,12 +5,12 @@ go 1.19
 require (
 	cloud.google.com/go/speech v1.21.0
 	cloud.google.com/go/texttospeech v1.7.2
-	github.com/Picovoice/porcupine/binding/go/v2 v2.2.1
+	github.com/Picovoice/porcupine/binding/go/v3 v3.0.1
 	github.com/gen2brain/malgo v0.11.10
 	github.com/hajimehoshi/go-mp3 v0.3.4
 	github.com/joho/godotenv v1.5.1
 	github.com/spf13/cobra v1.8.0
-	github.com/stianeikeland/go-rpio v4.2.0+incompatible
+	github.com/warthog618/gpio v1.0.1
 	go.uber.org/zap v1.26.0
 	google.golang.org/grpc v1.59.0
 	google.golang.org/protobuf v1.31.0
@@ -21,7 +21,6 @@ require (
 	cloud.google.com/go/compute v1.23.1 // indirect
 	cloud.google.com/go/compute/metadata v0.2.3 // indirect
 	cloud.google.com/go/longrunning v0.5.2 // indirect
-	github.com/Picovoice/porcupine/binding/go/v3 v3.0.1 // indirect
 	github.com/golang/groupcache v0.0.0-20210331224755-41bb18bfe9da // indirect
 	github.com/golang/protobuf v1.5.3 // indirect
 	github.com/google/s2a-go v0.1.7 // indirect
