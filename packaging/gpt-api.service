@@ -1,0 +1,14 @@
+[Unit]
+Description=GPT API Service
+After=network.target
+
+[Service]
+ExecStart=/home/<user>/go/bin/gpt-api
+Restart=always
+RestartSec=1
+User=<user>
+Group=<user>
+WorkingDirectory=/home/<user>/go/bin/
+
+[Install]
+WantedBy=multi-user.target

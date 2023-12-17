@@ -1,0 +1,15 @@
+[Unit]
+Description=GPT App Service
+After=gpt-api.service
+Requires=gpt-api.service
+
+[Service]
+ExecStart=/home/<user>/go/bin/gpt-app
+Restart=always
+RestartSec=1
+User=<user>
+Group=<user>
+WorkingDirectory=/home/<user>/go/bin/
+
+[Install]
+WantedBy=multi-user.target
