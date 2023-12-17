@@ -3,6 +3,7 @@ package gpio_motor
 import (
 	"github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/utils"
 	rpio "github.com/warthog618/gpio"
+	"sync"
 	"time"
 )
 
@@ -14,6 +15,7 @@ type GpioMotor struct {
 	BodyIN1       int
 	BodyIN2       int
 	AudioDetected int
+	mu            sync.Mutex
 }
 
 func MakeNewGpioMotor(headEnable, headIn1, headIn2, bodyEnable, bodyIn1, bodyIn2, audio int) (*GpioMotor, error) {
@@ -53,10 +55,14 @@ func MakeNewGpioMotor(headEnable, headIn1, headIn2, bodyEnable, bodyIn1, bodyIn2
 		BodyIN1:       bcmBodyIn1,
 		BodyIN2:       bcmBodyIn2,
 		AudioDetected: audioDetect,
+		mu:            sync.Mutex{},
 	}, nil
 }
 
 func (g *GpioMotor) CloseMouth() error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+
 	err := rpio.Open()
 	if err != nil {
 		return err
@@ -78,6 +84,8 @@ func (g *GpioMotor) CloseMouth() error {
 }
 
 func (g *GpioMotor) IsAudioDetected() (bool, error) {
+	g.mu.Lock()
+	defer g.mu.Unlock()
 	err := rpio.Open()
 	if err != nil {
 		return false, err
@@ -89,6 +97,8 @@ func (g *GpioMotor) IsAudioDetected() (bool, error) {
 }
 
 func (g *GpioMotor) LowerHead() error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
 	err := rpio.Open()
 	if err != nil {
 		return err
@@ -112,6 +122,9 @@ func (g *GpioMotor) LowerHead() error {
 }
 
 func (g *GpioMotor) LowerTail() error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
+
 	err := rpio.Open()
 	if err != nil {
 		return err
@@ -158,6 +171,8 @@ func (g *GpioMotor) MoveMouthToSpeech() error {
 }
 
 func (g *GpioMotor) OpenMouth() error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
 	err := rpio.Open()
 	if err != nil {
 		return err
@@ -183,6 +198,8 @@ func (g *GpioMotor) OpenMouth() error {
 }
 
 func (g *GpioMotor) RaiseHead() error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
 	err := rpio.Open()
 	if err != nil {
 		return err
@@ -208,6 +225,8 @@ func (g *GpioMotor) RaiseHead() error {
 }
 
 func (g *GpioMotor) RaiseTail() error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
 	err := rpio.Open()
 	if err != nil {
 		return err
@@ -233,6 +252,8 @@ func (g *GpioMotor) RaiseTail() error {
 }
 
 func (g *GpioMotor) ResetAll() error {
+	g.mu.Lock()
+	defer g.mu.Unlock()
 	err := rpio.Open()
 	if err != nil {
 		return err
