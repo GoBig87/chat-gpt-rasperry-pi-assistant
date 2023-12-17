@@ -63,4 +63,6 @@ Mount the raspberry pi by drilling small holes on the backside of the Fish plaqu
 ![adjustment](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/9ee03e3f-7876-406a-a150-9230d45ce8ff)
 Mount the audio sensor (Part 5) below the raspberry pi and inside the corners of the standing mount container.  Drill a small to medium size hole at the location of the audio sensors adjusment screw.  The screw will set the sensitivty of the mouth movement.  The hole will allow for adjustments once completed.
 
-
+### Step 9
+![motor_shield](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/722d29af-87e0-407b-a420-2a24e3d159a4)
+Mount the H bridge (Part 4) on the right side and try to make it flush with the bottom of the standing mount bracket.  Drill out the holes and mount the H bridge with 1/8 inch standoffs. 
