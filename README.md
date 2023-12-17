@@ -26,6 +26,7 @@ Tools needed
 2. Drill
 3. Hot glue gun
 4. Wire strippers
+5. Small Label Printer (optional)
 
 # Schematics
 ![schematics](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/49c2fc3b-7f3d-4afe-a5f9-1bd1bb857400)
