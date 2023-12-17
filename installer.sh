@@ -222,6 +222,18 @@ fi
 
 cp wake-words/* "$wake_word_dir"
 
+# make the wake word dir
+asound_file="/etc/asound.conf"
+if [ ! -d "$asound_file" ]; then
+  cat /proc/asound/cards
+  # Prompt user for the access key
+  read -p "Enter the number of the sound card to use: " user_input
+
+  sed "s/<sound_card>/$user_input/g" packaging/asound.conf > asound.conf.tmp
+  echo "Creating $asound_file"
+  sudo cp asound.conf.tmp /etc/asound.conf
+fi
+
 # Get the current username
 USERNAME=$USER
 
@@ -243,15 +255,3 @@ sudo systemctl enable gpt-api.service
 sudo systemctl start gpt-api.service
 sudo systemctl enable gpt-app.service
 sudo systemctl start gpt-app.service
-
-# make the wake word dir
-asound_file="/etc/asound.conf"
-if [ ! -d "$asound_file" ]; then
-  cat /proc/asound/cards
-  # Prompt user for the access key
-  read -p "Enter the number of the sound card to use: " user_input
-
-  sed "s/<sound_card>/$user_input/g" packaging/asound.conf > asound.conf.tmp
-  echo "Creating $asound_file"
-  sudo cp asound.conf.tmp /etc/asound.conf
-fi
