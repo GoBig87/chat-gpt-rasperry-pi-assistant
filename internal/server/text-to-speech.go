@@ -42,10 +42,6 @@ func (t *TextToSpeechServer) ProcessText(req *api.ProcessTextRequest, stream api
 	for {
 		select {
 		case <-transcriptionComplete:
-			// Transcription completed, send the final processing message
-			if transcribeError != nil {
-				return transcribeError
-			}
 			stream.Send(&api.ProcessTextResponse{Processed: true})
 			log.Printf("Text to speech complete\n")
 			return nil
