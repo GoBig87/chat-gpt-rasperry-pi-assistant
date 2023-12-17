@@ -216,6 +216,7 @@ func processChatGptResponse(ctx context.Context, response string) error {
 		if resp.Processed {
 			processed = true
 		}
+		time.Sleep(1 * time.Millisecond)
 	}
 	log.Println("finished processing response")
 	return nil
