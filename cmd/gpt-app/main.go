@@ -203,18 +203,14 @@ func processChatGptResponse(ctx context.Context, response string) error {
 		log.Printf("error processing response: %v", err)
 		return err
 	}
-	processed := false
 	for {
-		if processed {
-			break
-		}
 		resp, err := clnt.Recv()
 		if err != nil {
 			log.Printf("error receiving response: %v", err)
 			return err
 		}
 		if resp.Processed {
-			processed = true
+			break
 		}
 		time.Sleep(1 * time.Millisecond)
 	}
