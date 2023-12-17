@@ -79,7 +79,7 @@ func TranscribeText(text string) error {
 	finishedProcessing := false
 	onSamples := func(pOutputSample, pInputSamples []byte, framecount uint32) {
 		_, err = io.ReadFull(reader, pOutputSample)
-		if errors.Is(io.ErrUnexpectedEOF, err) {
+		if errors.Is(err, io.ErrUnexpectedEOF) || errors.Is(err, io.EOF) {
 			finishedProcessing = true
 		} else if err != nil {
 			log.Print("failed to read full", zap.Error(err))
