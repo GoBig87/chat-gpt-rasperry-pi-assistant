@@ -54,4 +54,13 @@ With wire strippers, trim the motor wires off of the electrical wire adapters.  
 MAKE SURE TO REMOVE THE ALL AA BATTERIES BEFORE THIS STEP!!! FAILURE TO DO SO WILL RESULT IN A NOT SO GOOD TIME!!!
 With a cutting tool, cut out the backside/inside of the battery compartment from the inside.  You will want to leave the walls alone.  Be warned that you will be hitting some small metal parts of the battery connection system.  Once you have the backside/inside taken off, slowly trim out the upper wall to allow for cables to be routed through.
 
+### Step 7
+![pi_placement](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/0d30dee0-7e69-4a2d-bd24-ff6ae3e15ebd)
+Mount the raspberry pi by drilling small holes on the backside of the Fish plaque.  Try to have about a 1/4 inch of spacing from the top and try to make it flush with the raised standing mount container.  Mount the pi with 1/8 inch standoffs.
+
+### Step 8
+![audio_sensor](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/ac1bf77d-090f-46d8-b181-e8d594535c04)
+![adjustment](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/9ee03e3f-7876-406a-a150-9230d45ce8ff)
+Mount the audio sensor (Part 5) below the raspberry pi and inside the corners of the standing mount container.  Drill a small to medium size hole at the location of the audio sensors adjusment screw.  The screw will set the sensitivty of the mouth movement.  The hole will allow for adjustments once completed.
+
 
