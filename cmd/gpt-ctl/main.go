@@ -136,7 +136,7 @@ var chatGptCmd = &cobra.Command{
 	Args:          cobra.ExactArgs(1),
 	RunE: func(cmd *cobra.Command, args []string) error {
 		text := args[0]
-		gc := gpt.NewChatGptClient(chatGptApiKey, chatGptApiKey, chatGptOrgID)
+		gc := gpt.NewChatGptClient(chatGptApiKey, chatGptOrgID, chatGptApiEndpoint)
 
 		resp, err := gc.PromptChatGPT(text)
 		if err != nil {

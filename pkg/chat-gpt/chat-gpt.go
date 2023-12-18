@@ -64,7 +64,7 @@ func (c *ChatGptClient) PromptChatGPT(question string) (string, error) {
 	// Create a new HTTP client
 	client := &http.Client{}
 
-	messages := []RequestMessage{}
+	var messages []RequestMessage
 	systemPrompt := RequestMessage{
 		Role:    "system",
 		Content: "Hello, I am wall mounted animatronic singing fish named Billy Bass that can assist.",
@@ -86,14 +86,14 @@ func (c *ChatGptClient) PromptChatGPT(question string) (string, error) {
 	// Convert the payload to JSON
 	payloadJSON, err := json.Marshal(payload)
 	if err != nil {
-		log.Fatalf("Error encoding JSON payload: %v", err)
+		log.Printf("Error encoding JSON payload: %v", err)
 		return "", err
 	}
 	log.Printf("made json payload: %s", string(payloadJSON))
 	// Create a new HTTP request
 	req, err := http.NewRequest("POST", c.ApiEndpoint, bytes.NewBuffer(payloadJSON))
 	if err != nil {
-		log.Fatalf("Error creating HTTP request: %v", err)
+		log.Printf("Error creating HTTP request: %v", err)
 		return "", err
 	}
 
