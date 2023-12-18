@@ -64,10 +64,22 @@ func (c *ChatGptClient) PromptChatGPT(question string) (string, error) {
 	// Create a new HTTP client
 	client := &http.Client{}
 
+	messages := []RequestMessage{}
+	systemPrompt := RequestMessage{
+		Role:    "system",
+		Content: "Hello, I am wall mounted animatronic singing fish named Billy Bass that can assist.",
+	}
+	user := RequestMessage{
+		Role:    "user",
+		Content: question,
+	}
+	messages = append(messages, systemPrompt)
+	messages = append(messages, user)
+
 	// Prepare the request payload
 	payload := &ChatGptRequest{
 		Model:    "gpt-3.5-turbo",
-		Messages: []RequestMessage{{Role: "assistant", Content: question}},
+		Messages: messages,
 		Stream:   false,
 	}
 
