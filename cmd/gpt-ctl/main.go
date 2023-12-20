@@ -2,16 +2,15 @@ package main
 
 import (
 	"fmt"
+	gpt "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/chat-gpt"
+	s2t "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/speech-to-text"
+	t2s "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/text-to-speech"
+	ww "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/wake-word"
 	"github.com/joho/godotenv"
 	"github.com/spf13/cobra"
 	"go.uber.org/zap"
 	"log"
 	"os"
-
-	gpt "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/chat-gpt"
-	s2t "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/speech-to-text"
-	t2s "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/text-to-speech"
-	ww "github.com/GoBig87/chat-gpt-raspberry-pi-assistant/pkg/wake-word"
 )
 
 var (
@@ -138,7 +137,11 @@ var chatGptCmd = &cobra.Command{
 		text := args[0]
 		gc := gpt.NewChatGptClient(chatGptApiKey, chatGptOrgID, chatGptApiEndpoint)
 
-		resp, err := gc.PromptChatGPT(text)
+		prompt := gpt.RequestMessage{
+			Role:    "user",
+			Content: text,
+		}
+		resp, err := gc.PromptChatGPT([]gpt.RequestMessage{prompt})
 		if err != nil {
 			fmt.Printf("Error: %v\n\n", err)
 			return err

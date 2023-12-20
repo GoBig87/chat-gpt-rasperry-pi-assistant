@@ -7,6 +7,7 @@ import (
 	"io/ioutil"
 	"log"
 	"net/http"
+	"time"
 )
 
 type ChatGptRequest struct {
@@ -16,8 +17,9 @@ type ChatGptRequest struct {
 }
 
 type RequestMessage struct {
-	Role    string `json:"role"`
-	Content string `json:"content"`
+	Role      string    `json:"role"`
+	Content   string    `json:"content"`
+	CreatedAt time.Time `json:"-"`
 }
 
 type ChatGptResponse struct {
@@ -60,21 +62,9 @@ func NewChatGptClient(apiKey, orgId, apiEndpoint string) *ChatGptClient {
 	}
 }
 
-func (c *ChatGptClient) PromptChatGPT(question string) (string, error) {
+func (c *ChatGptClient) PromptChatGPT(messages []RequestMessage) (string, error) {
 	// Create a new HTTP client
 	client := &http.Client{}
-
-	var messages []RequestMessage
-	systemPrompt := RequestMessage{
-		Role:    "system",
-		Content: "Hello, I am wall mounted animatronic singing fish named Billy Bass that can assist.",
-	}
-	user := RequestMessage{
-		Role:    "user",
-		Content: question,
-	}
-	messages = append(messages, systemPrompt)
-	messages = append(messages, user)
 
 	// Prepare the request payload
 	payload := &ChatGptRequest{

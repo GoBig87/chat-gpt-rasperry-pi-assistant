@@ -143,6 +143,15 @@ if ! grep -q "^$chat_gpt_api_endpoint_variable=" "$env_file"; then
   echo "Added $chat_gpt_api_endpoint_variable to $env_file with default value."
 fi
 
+chat_gpt_sys_prompt_variable="CHAT_GPT_SYS_PROMPT"
+default_chat_gpt_sys_prompt='"Hello, I am physical wall mounted animatronic singing fish named Billy Bass that can assist as a sentient all-knowing AI."'
+# Check if CHAT_GPT_API_SYS_PROMPT is present in the file
+if ! grep -q "^$chat_gpt_sys_prompt_variable=" "$env_file"; then
+  echo "The $chat_gpt_sys_prompt_variable variable is not set in $env_file."
+  echo "$chat_gpt_sys_prompt_variable=$default_chat_gpt_sys_prompt" >> "$env_file"
+  echo "Added $chat_gpt_sys_prompt_variable to $env_file with default value."
+fi
+
 # Check if the open ai access key variable is present in the file
 openai_key="CHAT_GPT_API_KEY"
 if ! grep -q "^$openai_key=" "$env_file" || [ -z "$(grep "^$openai_key=" "$env_file" | cut -d'=' -f2)" ]; then

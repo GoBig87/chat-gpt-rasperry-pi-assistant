@@ -20,6 +20,7 @@ var (
 	chatGptApiEndpoint string
 	chatGptApiKey      string
 	chatGptOrgID       string
+	chatGptSysPrompt   string
 	motorMouthEna      int
 	motorMouthIn1      int
 	motorMouthIn2      int
@@ -59,6 +60,9 @@ func init() {
 		log.Fatal("CHAT_GPT_ORG_ID is not set")
 		return
 	}
+	chatGptSysPrompt = os.Getenv("CHAT_GPT_SYS_PROMPT")
+	// empty sys prompt is okay
+
 	googleAppCreds := os.Getenv("GOOGLE_APPLICATION_CREDS")
 	if googleAppCreds == "" {
 		log.Fatal("GOOGLE_APPLICATION_CREDS is not set")
@@ -162,8 +166,12 @@ func runGrpcServer() error {
 	log.Printf("gRPC endpoint [%s]", grpcEndpoint)
 
 	grpcServer := grpc.NewServer()
-
-	api.RegisterChatGptServiceServer(grpcServer, server.MakeChatGptServer(chatGptApiKey, chatGptOrgID, chatGptApiEndpoint))
+	
+	api.RegisterChatGptServiceServer(grpcServer, server.MakeChatGptServer(
+		chatGptApiKey,
+		chatGptOrgID,
+		chatGptApiEndpoint,
+		chatGptSysPrompt))
 	api.RegisterGpioMotorServiceServer(grpcServer, server.MakeGpioMotorServer(gpioMotor))
 	api.RegisterSpeechToTextServiceServer(grpcServer, server.MakeSpeechToTextServer())
 	api.RegisterTextToSpeechServiceServer(grpcServer, server.MakeTextToSpeechServer())
