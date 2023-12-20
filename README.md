@@ -65,10 +65,10 @@ Mount the audio sensor (Part 5) below the raspberry pi and inside the corners of
 
 ### Step 9
 ![motor_shield](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/722d29af-87e0-407b-a420-2a24e3d159a4)
-Mount the H bridge (Part 4) on the right side and try to make it flush with the bottom of the standing mount bracket.  Drill out the holes and mount the H bridge with 1/8 inch standoffs. Connect DC barrel adapters (Part 10) to the output termianls.  Cable 1: Red OUT1, Black OUT2 and this will be for the mouth motor.  Cable 2: Red OUT4, Black OUT3 and this will be for the tail and head motor.  Remove the enable jumpers and connect the control pins to the rapsberry pi as shown in the schematics diagram.  Connect the VCC and Gnd for the voltage regulator with plain wires. Also attach a gnd pin from the raspberry pi to the gnd of the H bridge.
+Mount the H bridge (Part 4) on the right side and try to make it flush with the bottom of the standing mount bracket.  Drill out the holes and mount the H bridge with 1/8 inch standoffs. Connect DC barrel adapters (Part 10) to the output termianls.  Cable 1: Red OUT1, Black OUT2 and this will be for the mouth motor.  Cable 2: Red OUT4, Black OUT3 and this will be for the tail and head motor.  Remove the enable jumpers and connect the control pins to the rapsberry pi as shown in the schematics diagram.  Connect the VCC and Gnd for the voltage regulator with plain wires. Also attach a gnd pin from the raspberry pi to the gnd of the H bridge.  Connect the logical pins on the H bridge to the corresponding pins on the raspberry pi in the diagram.
 
 ### Step 10
-Mount the voltage regulator.  
+Mount the voltage regulator (Part 8, note: not shown in the pictures).  There should be room to mount the voltage regulator right next to the H bridge.  Wire a pair of cables from the H bridge 5v and Gnd inputs and connect them the to voltage regulator output.  Wire a male DC power plug to the input of the voltage regulator.  Make sure black goes to all the ground/negative and red to all the positive terminals.
 
 ### Step 11
 With a hot glue gun, glue the Qualcomm Quick Charge power supply (Part 2) to the left side of the board
@@ -77,4 +77,4 @@ With a hot glue gun, glue the Qualcomm Quick Charge power supply (Part 2) to the
 With a hot glue gun, glue the USB Speaker Phone (Part 2) above the H Birdge and to the right of the raspberry pi.
 
 ### Step 13
-Wire up the parts 
+Wire up the parts according to the diagram if you have not already done so.
