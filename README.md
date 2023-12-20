@@ -1,7 +1,7 @@
 # chat-gpt-rasperry-pi-assistant
 ChatGPT Raspberry Pi Assistant is an open-source project that enables voice-based artificial intelligence (AI) interactions on Raspberry Pi devices. It leverages OpenAI's ChatGPT model to provide natural language understanding and generation capabilities, making it a versatile voice assistant.
 
-![billy_bass(1)](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/1f2cb0f3-a0f6-4364-8005-36807af46830)
+https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/c6bdf42a-68d5-4903-87a5-be4ee5d2cc9c
 
 # Bill of Materials
 Parts
@@ -27,6 +27,8 @@ Tools needed
 3. Hot glue gun
 4. Wire strippers
 5. Small Label Printer (optional)
+
+![billy_bass(1)](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/1f2cb0f3-a0f6-4364-8005-36807af46830)
 
 # Schematics
 ![schematics](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/49c2fc3b-7f3d-4afe-a5f9-1bd1bb857400)
