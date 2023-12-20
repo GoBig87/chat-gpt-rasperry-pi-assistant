@@ -33,7 +33,7 @@ Tools needed
 # Schematics
 ![schematics](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/49c2fc3b-7f3d-4afe-a5f9-1bd1bb857400)
 
-# Preparation
+# Hardware Install
 ![IMG_4343](https://github.com/GoBig87/chat-gpt-rasperry-pi-assistant/assets/39137894/9fa4195b-b738-4483-b64d-e30c6ea61e86)
 
 ### Step 1
@@ -80,3 +80,5 @@ With a hot glue gun, glue the USB Speaker Phone (Part 2) above the H Birdge and 
 
 ### Step 13
 Wire up the parts according to the diagram if you have not already done so.
+
+# Software Install
